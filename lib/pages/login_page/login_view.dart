@@ -192,10 +192,6 @@ class LoginScreen extends StatelessWidget {
                                 username: usernameController.text,
                                 password: passwordController.text));
                           },
-                          child: Text(
-                            'Login',
-                            style: blackFontStyle.copyWith(color: Colors.white),
-                          ),
                           style: ButtonStyle(
                               elevation: MaterialStateProperty.all(0),
                               shape: MaterialStateProperty.all(
@@ -203,6 +199,10 @@ class LoginScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(8))),
                               backgroundColor:
                                   MaterialStateProperty.all(mainColor)),
+                          child: Text(
+                            'Login',
+                            style: blackFontStyle.copyWith(color: Colors.white),
+                          ),
                         ),
                       ),
                     ],

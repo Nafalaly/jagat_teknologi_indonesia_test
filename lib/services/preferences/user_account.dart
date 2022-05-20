@@ -4,19 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAccountPreferences {
   static const String logstatus = "_statuslog";
-  static const String userNameStr = "user_name";
-  static const String userEmailStr = "user_email";
+  static const String userId = "user_id";
+  static const String languageStr = "language";
+  static const String fullNameStr = "full_name";
   static const String userPhoneStr = "user_phone";
-  static const String roleStatusStr = "is_admin";
-  static const String usernameSTR = "username";
+  static const String userEmailStr = "user_email";
+  static const String roleStatusStr = "role";
+  static const String designationStr = "designation";
+  static const String outletIdStr = "outlet_id";
   static const String tokenSTR = "token";
-
-  UserStatus _role = UserStatus.defaultStatus;
-  String _userName = '';
-  String _userNameOfUser = '';
-  String _userEmail = '';
-  String _userPhone = '';
-  String _userToken = '';
 
   Future<void> logOut() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -34,34 +30,29 @@ class UserAccountPreferences {
 
   Future<void> setUser({required UserData account}) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(UserAccountPreferences.usernameSTR, account.userName);
-    pref.setString(UserAccountPreferences.userNameStr, account.userNameOfUser);
-    pref.setString(UserAccountPreferences.userEmailStr, account.userEmail);
-    pref.setString(UserAccountPreferences.userPhoneStr, account.userPhone);
+    pref.setString(UserAccountPreferences.languageStr, account.language);
+    pref.setString(UserAccountPreferences.userId, account.userId);
+    pref.setString(UserAccountPreferences.userEmailStr, account.emailAddress);
+    pref.setString(UserAccountPreferences.userPhoneStr, account.phone);
     pref.setString(UserAccountPreferences.tokenSTR, account.token);
     pref.setBool(UserAccountPreferences.logstatus, true);
     pref.setString(UserAccountPreferences.roleStatusStr,
-        getSTRfromStatus(status: account.userRole));
+        getSTRfromStatus(status: account.role));
     return;
   }
 
   Future<UserData> getPrefAccount() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    _userToken = pref.getString(tokenSTR).toString();
-    _userName = pref.getString(usernameSTR).toString();
-    _userNameOfUser = pref.getString(userNameStr).toString();
-    _userEmail = pref.getString(userEmailStr).toString();
-    _userPhone = pref.getString(userPhoneStr).toString();
-    _role = getStatusFromSTR(data: pref.getString(roleStatusStr).toString());
-    // ignore: unnecessary_null_comparison
-    bool log = _userToken != 'null';
     return UserData.fromPref(
-        token: _userToken,
-        statusLog: log,
-        email: _userEmail,
-        name: _userNameOfUser,
-        username: _userName,
-        phone: _userPhone,
-        role: _role);
+        designation: pref.getString(designationStr).toString(),
+        emailAddress: pref.getString(userEmailStr).toString(),
+        fullName: pref.getString(fullNameStr).toString(),
+        language: pref.getString(languageStr).toString(),
+        outletId: pref.getString(outletIdStr).toString(),
+        phone: pref.getString(userPhoneStr).toString(),
+        role: getStatusFromSTR(data: pref.getString(roleStatusStr).toString()),
+        statusLog: pref.getBool(logstatus)!,
+        token: pref.getString(tokenSTR).toString(),
+        userId: pref.getString(userId).toString());
   }
 }

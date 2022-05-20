@@ -2,12 +2,12 @@ part of 'shared.dart';
 
 //Color greyColor = "8D82A3".toColor();
 Color greyColor = "9fa8b5".toColor();
-Color mainColor = "#EC9706".toColor();
+Color mainColor = "#2787BD".toColor();
 Color secondColor = "#1e2087".toColor();
 Color thirdColor = "#dad5c0".toColor();
 Color greyBackground = "F0F0F0".toColor();
 String iconWtText = "icon_w_text.png";
-String logoOnly = "assets/logo.png";
+String logoOnly = "assets/logo.jpg";
 String accountBorder = "assets/photo_border.png";
 
 Widget loadingIndicator = SpinKitFadingCircle(

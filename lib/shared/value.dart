@@ -2,43 +2,32 @@ part of 'shared.dart';
 
 enum UserStatus {
   admin,
-  leader,
-  worker,
+  user,
+  manager,
   defaultStatus,
 }
 
 String getSTRfromStatus({required UserStatus status}) {
   switch (status) {
-    case UserStatus.leader:
-      return 'LEADER';
-    case UserStatus.worker:
-      return 'WORKER';
+    case UserStatus.user:
+      return 'User';
+    case UserStatus.manager:
+      return 'Manager';
     case UserStatus.admin:
-      return 'ADMIN';
+      return 'Admin';
     default:
       return 'undefined';
   }
 }
 
-enum DataSource { link, custom }
-
-String getStrFromSource(DataSource source) {
-  switch (source) {
-    case DataSource.link:
-      return 'link';
-    case DataSource.custom:
-      return 'custom';
-  }
-}
-
 UserStatus getStatusFromSTR({required String data}) {
   switch (data) {
-    case 'WORKER':
-      return UserStatus.worker;
-    case 'ADMIN':
+    case 'Admin':
       return UserStatus.admin;
-    case 'LEADER':
-      return UserStatus.leader;
+    case 'User':
+      return UserStatus.user;
+    case 'Manager':
+      return UserStatus.manager;
     default:
       return UserStatus.defaultStatus;
   }

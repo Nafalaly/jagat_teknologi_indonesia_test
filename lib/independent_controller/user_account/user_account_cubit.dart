@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:jagat_teknologi_indonesia_test/models/models.dart';
 import 'package:jagat_teknologi_indonesia_test/services/preferences/user_account.dart';
 import 'package:bloc/bloc.dart';
@@ -24,5 +26,8 @@ class UserAccountCubit extends Cubit<UserAccountState> {
     emit(UserAccountAttached(accountData: newAccount));
   }
 
-  Future<void> logOutAccount() async {}
+  Future<void> logOutAccount() async {
+    await preferences.logOut();
+    emit(UserAccountNoAccountInformation());
+  }
 }

@@ -1,10 +1,12 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
+// ignore_for_file: invalid_use_of_visible_for_testing_member, depend_on_referenced_packages
 
 import 'dart:async';
 
 import 'package:jagat_teknologi_indonesia_test/independent_controller/connectivity_controller/connectivity_state.dart';
 import 'package:jagat_teknologi_indonesia_test/independent_controller/user_account/user_account_cubit.dart';
 import 'package:bloc/bloc.dart';
+import 'package:jagat_teknologi_indonesia_test/models/models.dart';
+import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 import 'package:meta/meta.dart';
 
 part 'login_event.dart';
@@ -34,7 +36,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         add(LoginBadInput(message: 'Password must not be empty'));
       } else {
         if ((state as LoginIdleState).connectionStatus is InternetConnected) {
-          // login();
+          login();
         } else {
           add(LoginInteruptedByConnection());
         }
@@ -68,25 +70,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  // APIUserService apiUserService = APIUserService();
+  APIUserService apiUserService = APIUserService();
 
-  // Future<void> login() async {
-  //   ResponseParser result = await apiUserService.loginUser(
-  //       user: (state as LoginIdleState).username,
-  //       pass: (state as LoginIdleState).password);
-  //   if (result.getStatus == ResponseStatus.success) {
-  //     await accountCubit.setAccount(
-  //         newAccount: UserData.fromJson(data: result.getData!));
-  //     add(LoginAttemptSucessfully());
-  //   } else {
-  //     if (result.getMessage == 'Authentication Failed') {
-  //       add(LoginFailed(message: 'Username atau password salah'));
-  //     } else {
-  //       add(LoginFailed(message: 'Something went wrong'));
-  //     }
-  //   }
-  //   return;
-  // }
+  Future<void> login() async {
+    ResponseParser result = await apiUserService.loginUser(
+        user: (state as LoginIdleState).username,
+        pass: (state as LoginIdleState).password);
+    if (result.getStatus == ResponseStatus.success) {
+      await accountCubit.setAccount(
+          newAccount: UserData.fromJson(data: result.getData!));
+      add(LoginAttemptSucessfully());
+    } else {
+      if (result.getStatusCode == 1002) {
+        add(LoginFailed(message: 'Username atau password salah'));
+      } else {
+        add(LoginFailed(message: 'Something went wrong'));
+      }
+    }
+    return;
+  }
 
   @override
   Future<void> close() {

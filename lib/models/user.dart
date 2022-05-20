@@ -2,39 +2,41 @@
 
 part of 'models.dart';
 
-class UserData with User {
-  UserData();
-  UserData.fromPref(
-      {required this.token,
-      required String email,
-      required String name,
-      required String username,
-      required String phone,
-      required UserStatus role,
-      required this.statusLog}) {
-    super.userRole = role;
-    super.userEmail = email;
-    super.userName = username;
-    super.userNameOfUser = name;
-    super.userPhone = phone;
-  }
+class UserData {
+  late String userId;
+  late String language;
+  late String fullName;
+  late String phone;
+  late String emailAddress;
+  late UserStatus role;
+  late String? designation;
+  late String? outletId;
   bool statusLog = false;
   String token = 'No Token';
+  UserData();
+  UserData.fromPref({
+    required this.userId,
+    required this.language,
+    required this.fullName,
+    required this.phone,
+    required this.emailAddress,
+    required this.role,
+    required this.designation,
+    required this.outletId,
+    required this.token,
+    required this.statusLog,
+  });
+
   UserData.fromJson({required Map data}) {
-    token = '${data['token_type']} ${data['token_result']}';
-    super.userRole = getStatusFromSTR(data: data['user']['role']);
-    super.userEmail = data['user']['email'];
-    super.userName = data['user']['username'];
-    super.userNameOfUser = data['user']['name'];
-    super.userPhone = data['user']['phone'];
+    // token = '${data['token_type']} ${data['token_result']}';
+    userId = data['user']['user_id'];
+    language = data['user']['language'];
+    fullName = data['user']['full_name'];
+    phone = data['user']['phone'];
+    emailAddress = data['user']['email_address'];
+    role = getStatusFromSTR(data: data['user']['role']);
+    designation = data['user']['designation'];
+    outletId = data['user']['outlet_id'];
     statusLog = true;
   }
-}
-
-abstract class User {
-  UserStatus userRole = UserStatus.defaultStatus;
-  String userName = 'No name';
-  String userNameOfUser = 'No Name';
-  String userEmail = 'No Email';
-  String userPhone = 'No Phone';
 }
