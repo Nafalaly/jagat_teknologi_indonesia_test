@@ -42,9 +42,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => UserAccountCubit()),
       ],
       child: MaterialApp(
-        initialRoute: '/LoginScreen',
+        initialRoute: '/SplashScreen',
         routes: {
-          // '/SplashScreen': (context) => const SplashScreen(),
+          '/Dashboard': (context) => const Dashboard(),
+          '/SplashScreen': (context) => const SplashScreen(),
           '/LoginScreen': (context) => LoginScreen(),
         },
         theme: ThemeData(primarySwatch: Colors.blue),

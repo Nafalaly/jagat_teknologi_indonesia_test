@@ -108,111 +108,121 @@ class LoginScreen extends StatelessWidget {
                       onFinish: () {
                         context.read<LoginBloc>().add(LoginDismissBadInput());
                       });
-                } else if (state is LoginSucessfullyState) {
-                  //TODO GOTO PAGE
                 }
               }
+              if (state is LoginSucessfullyState) {
+                Navigator.pushAndRemoveUntil(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return const Dashboard();
+                }), (route) => false);
+              }
             },
-            child: Column(
-              children: [
-                SizedBox(
-                    child: Column(
-                  children: [
-                    Container(
-                      width: DeviceScreen.devWidth,
-                      margin:
-                          const EdgeInsets.symmetric(horizontal: defaultMargin),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.black)),
-                      child: TextField(
-                        controller: usernameController,
-                        onChanged: (val) => context
-                            .read<LoginBloc>()
-                            .add(LoginFormUsernameChanged(username: val)),
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintStyle: greyFontStyle,
-                            hintText: "Username"),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      width: DeviceScreen.devWidth,
-                      margin:
-                          const EdgeInsets.symmetric(horizontal: defaultMargin),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.black)),
-                      child: TextField(
-                        controller: passwordController,
-                        onChanged: (val) => context
-                            .read<LoginBloc>()
-                            .add(LoginFormPasswordChanged(password: val)),
-                        obscureText: (state as LoginIdleState).passwordVisible,
-                        decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                                onPressed: () => context.read<LoginBloc>().add(
-                                    LoginPasswordFormVisibleChanged(
-                                        visibleStatus: !state.passwordVisible)),
-                                icon: Icon(
-                                  state.passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: greyColor,
-                                )),
-                            border: InputBorder.none,
-                            hintStyle: greyFontStyle,
-                            hintText: "Password"),
-                      ),
-                    ),
-                  ],
-                )),
-                Container(
-                  margin: const EdgeInsets.only(
-                      right: defaultMargin,
-                      left: defaultMargin,
-                      top: defaultMargin),
-                  height: 60,
-                  width: 400,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            child: (state is LoginIdleState)
+                ? Column(
                     children: [
                       SizedBox(
-                        height: 50,
-                        width: 120,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            context.read<LoginBloc>().add(LoginAttempt(
-                                username: usernameController.text,
-                                password: passwordController.text));
-                          },
-                          style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(0),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8))),
-                              backgroundColor:
-                                  MaterialStateProperty.all(mainColor)),
-                          child: Text(
-                            'Login',
-                            style: blackFontStyle.copyWith(color: Colors.white),
+                          child: Column(
+                        children: [
+                          Container(
+                            width: DeviceScreen.devWidth,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: defaultMargin),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.black)),
+                            child: TextField(
+                              controller: usernameController,
+                              onChanged: (val) => context
+                                  .read<LoginBloc>()
+                                  .add(LoginFormUsernameChanged(username: val)),
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintStyle: greyFontStyle,
+                                  hintText: "Username"),
+                            ),
                           ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            width: DeviceScreen.devWidth,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: defaultMargin),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.black)),
+                            child: TextField(
+                              controller: passwordController,
+                              onChanged: (val) => context
+                                  .read<LoginBloc>()
+                                  .add(LoginFormPasswordChanged(password: val)),
+                              obscureText: (state).passwordVisible,
+                              decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                      onPressed: () => context
+                                          .read<LoginBloc>()
+                                          .add(LoginPasswordFormVisibleChanged(
+                                              visibleStatus:
+                                                  !state.passwordVisible)),
+                                      icon: Icon(
+                                        state.passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: greyColor,
+                                      )),
+                                  border: InputBorder.none,
+                                  hintStyle: greyFontStyle,
+                                  hintText: "Password"),
+                            ),
+                          ),
+                        ],
+                      )),
+                      Container(
+                        margin: const EdgeInsets.only(
+                            right: defaultMargin,
+                            left: defaultMargin,
+                            top: defaultMargin),
+                        height: 60,
+                        width: 400,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              width: 120,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  context.read<LoginBloc>().add(LoginAttempt(
+                                      username: usernameController.text,
+                                      password: passwordController.text));
+                                },
+                                style: ButtonStyle(
+                                    elevation: MaterialStateProperty.all(0),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8))),
+                                    backgroundColor:
+                                        MaterialStateProperty.all(mainColor)),
+                                child: Text(
+                                  'Login',
+                                  style: blackFontStyle.copyWith(
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      const SizedBox(
+                        height: 30,
+                      ),
                     ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-              ],
-            ),
+                  )
+                : const SizedBox(),
           );
         },
       ),

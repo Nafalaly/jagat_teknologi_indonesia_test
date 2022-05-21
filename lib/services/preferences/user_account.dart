@@ -51,7 +51,7 @@ class UserAccountPreferences {
         outletId: pref.getString(outletIdStr).toString(),
         phone: pref.getString(userPhoneStr).toString(),
         role: getStatusFromSTR(data: pref.getString(roleStatusStr).toString()),
-        statusLog: pref.getBool(logstatus)!,
+        statusLog: pref.getBool(logstatus) ?? false,
         token: pref.getString(tokenSTR).toString(),
         userId: pref.getString(userId).toString());
   }
