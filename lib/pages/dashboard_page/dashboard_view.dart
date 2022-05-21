@@ -6,8 +6,14 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DashboardBloc()..add(DashboardInitialReload()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => OutletCubit()),
+        BlocProvider(
+            create: (context) =>
+                DashboardBloc(outletCubit: context.read<OutletCubit>())
+                  ..add(DashboardInitialReload()))
+      ],
       child: SafeArea(
           child: Scaffold(
               backgroundColor: mainColor,
@@ -209,7 +215,7 @@ class BoxShadowPainter extends CustomPainter {
         size.width - value, size.height * 0.15, size.width, 0);
     garis.close();
 
-    canvas.drawShadow(garis, Colors.black, 5.0, false);
+    canvas.drawShadow(garis, Colors.transparent, 5.0, false);
   }
 
   @override

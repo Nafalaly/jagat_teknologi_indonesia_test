@@ -1,18 +1,17 @@
 part of '../services.dart';
 
-class APIUserService {
-  APIUserService();
+class APIOutlet {
+  APIOutlet();
   Dio dio = Dio();
 
-  Future<ResponseParser> loginUser({
-    required String user,
-    required String pass,
-  }) async {
+  Future<ResponseParser> fetchInitialData(
+      // required String outletId,
+      ) async {
     ResponseParser parser = ResponseParser();
     try {
-      Map data = {"act": "LOGIN", "un": user, "up": pass};
+      Map<String, dynamic> data = {"act": "initData", "outlet_id": 1};
       final Response responseku =
-          await dio.post(BaseUrl.loginToAccount, data: json.encode(data));
+          await dio.get(BaseUrl.initialData, queryParameters: data);
       parser = ResponseParser.parse(mapData: responseku.data);
       return parser;
     } on DioError catch (e) {

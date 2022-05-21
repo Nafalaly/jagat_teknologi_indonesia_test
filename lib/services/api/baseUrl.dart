@@ -8,4 +8,6 @@ class BaseUrl {
       'http://test-tech.api.jtisrv.com/md/public/API/';
 
   static String loginToAccount = '${_baseURL}Auth';
+
+  static String initialData = '${_baseURL}Auth/initData';
 }

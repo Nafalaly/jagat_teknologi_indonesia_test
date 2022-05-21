@@ -1,20 +1,31 @@
 part of 'dashboard_bloc.dart';
 
 @immutable
-abstract class DashboardState {}
+abstract class DashboardState {
+  DashboardState();
+  int currentIndexMenu = 0;
+}
 
 class DashboardInitial extends DashboardState {}
 
+// ignore: must_be_immutable
 class DashboardIdleState extends DashboardState {
-  final int currentIndexMenu;
+  Outlet? outlet;
   final DataState dataStatus;
 
-  DashboardIdleState(
-      {this.currentIndexMenu = 0, this.dataStatus = const DataReload()});
-  DashboardState copyWith({int? currentIndex, DataState? dataStatus}) {
+  DashboardIdleState({
+    int? index = 0,
+    this.dataStatus = const DataReload(),
+    this.outlet,
+  }) {
+    super.currentIndexMenu = index!;
+  }
+  DashboardState copyWith(
+      {int? currentIndex, DataState? dataStatus, Outlet? outlet}) {
     return DashboardIdleState(
-      currentIndexMenu: currentIndex ?? currentIndexMenu,
+      index: currentIndex ?? currentIndexMenu,
       dataStatus: dataStatus ?? this.dataStatus,
+      outlet: outlet ?? this.outlet,
     );
   }
 }
