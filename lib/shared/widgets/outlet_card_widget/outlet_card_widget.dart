@@ -1,0 +1,377 @@
+part of '../../shared.dart';
+
+class OutletCardWidget extends StatelessWidget {
+  const OutletCardWidget({
+    Key? key,
+    required this.outletSub,
+    required this.currencies,
+    required this.index,
+    required this.cardCubit,
+  }) : super(key: key);
+  final OutletSub outletSub;
+  final int index;
+  final List<Currency> currencies;
+  final double widgetHeight = 160;
+  final CardHandlerCubit cardCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          OutletCardWidgetBloc(cardHandlerCubit: cardCubit, cardIndex: index),
+      child: BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
+        builder: (context, state) {
+          return Container(
+            height: widgetHeight,
+            width: DeviceScreen.devWidth,
+            margin: const EdgeInsets.only(top: 10),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              child: Stack(
+                alignment: Alignment.centerRight,
+                children: [
+                  outletDisplay(),
+                  (state as OutletCardWidgetIdleState).detailOpen
+                      ? GestureDetector(
+                          onTap: () => context
+                              .read<OutletCardWidgetBloc>()
+                              .add(ClosePanel()),
+                          child: Container(
+                            height: widgetHeight,
+                            width: DeviceScreen.devWidth,
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        )
+                      : const SizedBox(),
+                  detailOutletDisplay(),
+                  (state).detailOpen
+                      ? const SizedBox()
+                      : GestureDetector(
+                          onTap: () => context
+                              .read<OutletCardWidgetBloc>()
+                              .add(OpenPanel()),
+                          child: Container(
+                              height: widgetHeight,
+                              width: 50,
+                              color: Colors.transparent)),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget detailOutletDisplay() {
+    const double upperCompHeight = 50;
+    final List<List<String>> services = [
+      ['Masuk', 'assets/btn_income.png'],
+      ['Keluar', 'assets/btn_outcome.png'],
+      ['Pindah', 'assets/btn_move.png'],
+      ['Mutasi', 'assets/btn_history.png'],
+      ['Kurs', 'assets/btn_kurs.png'],
+    ];
+    return BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
+      builder: (context, state) {
+        return Positioned(
+          right: (state as OutletCardWidgetIdleState).detailOpen
+              ? 0
+              : (DeviceScreen.devWidth - (80 + 20)) * -1,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              myWidget(),
+              Container(
+                height: widgetHeight,
+                width: DeviceScreen.devWidth - (20 + 60),
+                color: secondColor,
+                padding: const EdgeInsets.all(15),
+                child: (state).detailOpen
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: upperCompHeight,
+                            width: DeviceScreen.devWidth - (20 + 60),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: services
+                                    .map((e) => serviceWidget(
+                                        title: e[0], imgPath: e[1]))
+                                    .toList()),
+                          ),
+                          Container(
+                            height: widgetHeight - (upperCompHeight + 30),
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    spreadRadius: 1,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            width: DeviceScreen.devWidth - (20 + 60),
+                            child: Column(
+                              children: [
+                                detailTextInformationWidget(
+                                    trailingText: '16',
+                                    leaderText: 'Jumlah Barang',
+                                    isHeader: true),
+                                Column(
+                                    children: currencies
+                                        .map((e) => detailTextInformationWidget(
+                                            trailingText: dummyValue(e),
+                                            leaderText: e.currencyName))
+                                        .toList())
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String dummyValue(Currency currency) {
+    switch (currency.currencyName) {
+      case 'IDR':
+        return priceFormat(format: 100000000, symbol: currency.currencyLogo);
+      case 'USD':
+        return priceFormat(format: 2000, symbol: currency.currencyLogo);
+      case 'EUR':
+        return priceFormat(format: 200, symbol: currency.currencyLogo);
+      case 'SGD':
+        return priceFormat(format: 1000, symbol: currency.currencyLogo);
+      default:
+        return 'This is an dummy value only';
+    }
+  }
+
+  Widget detailTextInformationWidget(
+      {required String leaderText,
+      required String trailingText,
+      bool? isHeader = false}) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: CustomPaint(
+            painter: DashedLinePainter(),
+            child: SizedBox(
+              height: 0.5,
+              width: DeviceScreen.devWidth - (20 + 60),
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          height: 15,
+          width: DeviceScreen.devWidth - (20 + 60),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Text(leaderText,
+                    style: greyFontStyle.copyWith(
+                        fontWeight:
+                            isHeader! ? FontWeight.bold : FontWeight.w400)),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                color: Colors.white,
+                child: Text(trailingText,
+                    style: greyFontStyle.copyWith(
+                        fontWeight:
+                            isHeader ? FontWeight.bold : FontWeight.w400)),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget serviceWidget({
+    required String title,
+    required String imgPath,
+  }) {
+    return SizedBox(
+      height: 50,
+      width: 50,
+      child: Column(children: [
+        SizedBox(
+          height: 31,
+          width: 50,
+          child: Image.asset(
+            imgPath,
+            fit: BoxFit.scaleDown,
+          ),
+        ),
+        Text(
+          title,
+          style: blackFontStyle2.copyWith(color: mainColor),
+        )
+      ]),
+    );
+  }
+
+  Widget myWidget() {
+    return BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
+      builder: (context, state) {
+        return Transform.scale(
+          scale: 0.6,
+          alignment: Alignment.centerRight,
+          child: RotatedBox(
+            quarterTurns: 1,
+            child: CustomPaint(
+              painter: BoxShadowPainter(),
+              child: ClipPath(
+                clipper: MyCustomClipper(),
+                child: GestureDetector(
+                  // onTap: () => context.read<OutletCardWidgetBloc>().add(
+                  //     OpenPanel(
+                  //         toogle: !(state as OutletCardWidgetIdleState)
+                  //             .detailOpen)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: secondColor,
+                    ),
+                    height: 40,
+                    width: 85,
+                    padding:
+                        const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                    alignment: Alignment.topCenter,
+                    child: Icon(
+                        (state as OutletCardWidgetIdleState).detailOpen
+                            ? Icons.arrow_circle_up_outlined
+                            : Icons.add_circle_outline_outlined,
+                        color: mainColor,
+                        size: 35),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget outletDisplay() {
+    return Container(
+      height: widgetHeight,
+      width: DeviceScreen.devWidth,
+      // color: Colors.yellow,
+      padding: const EdgeInsets.only(left: 15, top: 10, right: 50, bottom: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            outletSub.outletName,
+            style: blackFontStyle2.copyWith(
+                color: mainColor, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 7),
+          Column(
+              children: currencies
+                  .map((e) => currencyWidget(symbol: e.currencyName))
+                  .toList())
+        ],
+      ),
+    );
+  }
+
+  Widget currencyWidget({required String symbol}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 5),
+      height: 20,
+      width: DeviceScreen.devWidth,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.moneyBill,
+                  color: mainColor,
+                  size: 20,
+                ),
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(symbol,
+                      style: blackFontStyle2.copyWith(color: greyColor)),
+                )
+              ],
+            ),
+          ),
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              CustomPaint(
+                painter: DashedLinePainter(),
+                child: SizedBox(
+                  height: 6,
+                  width: DeviceScreen.devWidth - 145,
+                ),
+              ),
+              Container(
+                height: 30,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: Text('1200',
+                    style: blackFontStyle2.copyWith(
+                        color: mainColor, fontWeight: FontWeight.w600)),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    double dashWidth = 5, dashSpace = 5, startX = 0;
+    final paint = Paint()
+      ..color = Colors.grey
+      ..strokeWidth = 0.5;
+    while (startX < size.width) {
+      canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

@@ -8,6 +8,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => CardHandlerCubit()),
         BlocProvider(create: (context) => OutletCubit()),
         BlocProvider(
             create: (context) =>
@@ -42,10 +43,40 @@ class Dashboard extends StatelessWidget {
   }
 
   Widget bodyDisplay() {
-    return Container(
-        height: DeviceScreen.devHeight - 180,
-        width: DeviceScreen.devWidth,
-        color: Colors.red);
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      builder: (context, state) {
+        if (state is DashboardIdleState) {
+          switch (state.currentIndexMenu) {
+            case 0:
+              return Container(
+                height: DeviceScreen.devHeight - 180,
+                width: DeviceScreen.devWidth,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: (state)
+                      .outlet!
+                      .outletSubs
+                      .map((e) => OutletCardWidget(
+                            outletSub: e,
+                            currencies: state.outlet!.currencies,
+                            cardCubit: context.read<CardHandlerCubit>(),
+                            index: (state).outlet!.outletSubs.indexOf(e),
+                          ))
+                      .toList(),
+                ),
+              );
+            default:
+              return const Center(
+                child: Text('No Services available'),
+              );
+          }
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
   }
 
   Widget appMenus(BuildContext context) {

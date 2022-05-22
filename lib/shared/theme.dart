@@ -3,7 +3,7 @@ part of 'shared.dart';
 //Color greyColor = "8D82A3".toColor();
 Color greyColor = "9fa8b5".toColor();
 Color mainColor = "#2787BD".toColor();
-Color secondColor = "#1e2087".toColor();
+Color secondColor = "#C1DDED".toColor();
 Color thirdColor = "#dad5c0".toColor();
 Color greyBackground = "F0F0F0".toColor();
 String iconWtText = "icon_w_text.png";
@@ -34,9 +34,9 @@ TextStyle headerFontStyle2 = GoogleFonts.poppins()
 const double defaultMargin = 24;
 const double defaultBottombarHeight = 65;
 
-String priceFormat(double format) {
+String priceFormat({required double format, String? symbol = 'IDR'}) {
   return NumberFormat.currency(
-          locale: 'id-ID', symbol: 'IDR ', decimalDigits: 0)
+          locale: 'id-ID', symbol: '$symbol ', decimalDigits: 0)
       .format(format);
 }
 

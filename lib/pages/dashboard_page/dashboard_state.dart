@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 part of 'dashboard_bloc.dart';
 
 @immutable
@@ -8,7 +10,6 @@ abstract class DashboardState {
 
 class DashboardInitial extends DashboardState {}
 
-// ignore: must_be_immutable
 class DashboardIdleState extends DashboardState {
   Outlet? outlet;
   final DataState dataStatus;
@@ -19,6 +20,7 @@ class DashboardIdleState extends DashboardState {
     this.outlet,
   }) {
     super.currentIndexMenu = index!;
+    outlet ??= Outlet();
   }
   DashboardState copyWith(
       {int? currentIndex, DataState? dataStatus, Outlet? outlet}) {

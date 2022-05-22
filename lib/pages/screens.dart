@@ -9,6 +9,7 @@ import 'package:jagat_teknologi_indonesia_test/pages/login_page/login_bloc.dart'
 import 'package:jagat_teknologi_indonesia_test/pages/splash_screen/splash_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 import 'package:jagat_teknologi_indonesia_test/shared/shared.dart';
+import 'package:jagat_teknologi_indonesia_test/shared/widgets/outlet_card_widget/cubit/card_handler_cubit.dart';
 
 part 'login_page/login_view.dart';
 part 'dashboard_page/dashboard_view.dart';
