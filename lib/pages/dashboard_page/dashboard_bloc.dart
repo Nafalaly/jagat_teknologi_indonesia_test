@@ -36,6 +36,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       dummyFetch();
     } else if (event is DashboardReloadCompleteNoData) {
       emit(DashboardIdleState(index: state.currentIndexMenu));
+    } else if (event is DashboardNavigatingToOtherPage) {
+      emit((state as DashboardIdleState)
+          .copyWith(navigator: DashboardNavigator.idle));
+    } else if (event is DashboardNavigateToMasuk) {
+      emit((state as DashboardIdleState)
+          .copyWith(navigator: DashboardNavigator.masuk));
     }
   }
 

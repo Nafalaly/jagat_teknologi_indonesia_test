@@ -4,6 +4,20 @@ class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
   final int currentIndex = 0;
 
+  void navigatorHandler(DashboardNavigator navigator, BuildContext context) {
+    switch (navigator) {
+      case DashboardNavigator.masuk:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return const IncomeServicePage();
+        }));
+        context.read<DashboardBloc>().add(DashboardNavigatingToOtherPage());
+        break;
+      default:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -15,33 +29,40 @@ class Dashboard extends StatelessWidget {
                 DashboardBloc(outletCubit: context.read<OutletCubit>())
                   ..add(DashboardInitialReload()))
       ],
-      child: SafeArea(
-          child: Scaffold(
-              backgroundColor: mainColor,
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                centerTitle: true,
-                title: Text(
-                  'APP KEUANGAN',
-                  style: blackFontStyle.copyWith(
-                      color: mainColor, fontWeight: FontWeight.w700),
+      child: BlocListener<DashboardBloc, DashboardState>(
+        listener: (context, state) {
+          if (state is DashboardIdleState) {
+            navigatorHandler(state.navigator, context);
+          }
+        },
+        child: SafeArea(
+            child: Scaffold(
+                backgroundColor: mainColor,
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  title: Text(
+                    'APP KEUANGAN',
+                    style: blackFontStyle.copyWith(
+                        color: mainColor, fontWeight: FontWeight.w700),
+                  ),
+                  actions: [
+                    SizedBox(
+                      height: 30,
+                      width: 60,
+                      child: Image.asset('assets/btn_notification.png'),
+                    )
+                  ],
                 ),
-                actions: [
-                  SizedBox(
-                    height: 30,
-                    width: 60,
-                    child: Image.asset('assets/btn_notification.png'),
-                  )
-                ],
-              ),
-              body: Stack(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  bodyDisplay(),
-                  appMenus(context),
-                ],
-              ))),
+                body: Stack(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    bodyDisplay(),
+                    appMenus(context),
+                  ],
+                ))),
+      ),
     );
   }
 
@@ -64,6 +85,7 @@ class Dashboard extends StatelessWidget {
                       .outletSubs
                       .map((e) => OutletCardWidget(
                             endPos: 0,
+                            dashboard: context.read<DashboardBloc>(),
                             startPos: (DeviceScreen.devWidth - (80 + 20)) * -1,
                             outletSub: e,
                             currencies: state.outlet!.currencies,

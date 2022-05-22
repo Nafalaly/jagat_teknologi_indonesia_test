@@ -14,3 +14,4 @@ import 'package:jagat_teknologi_indonesia_test/shared/widgets/outlet_card_widget
 part 'login_page/login_view.dart';
 part 'dashboard_page/dashboard_view.dart';
 part 'splash_screen/splash_view.dart';
+part 'services_page/income_page/income_page_view.dart';

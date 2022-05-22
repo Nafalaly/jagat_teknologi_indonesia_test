@@ -14,6 +14,8 @@ class DashboardReloadComplete extends DashboardEvent {
 
 class DashboardReloadCompleteNoData extends DashboardEvent {}
 
+class DashboardNavigatingToOtherPage extends DashboardEvent {}
+
 class DashboardNavigateToMasuk extends DashboardEvent {
   final OutletSub currentOutletSub;
   DashboardNavigateToMasuk({required this.currentOutletSub});

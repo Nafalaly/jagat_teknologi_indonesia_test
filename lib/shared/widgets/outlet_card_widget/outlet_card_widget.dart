@@ -6,6 +6,7 @@ class OutletCardWidget extends StatefulWidget {
     required this.outletSub,
     required this.currencies,
     required this.index,
+    required this.dashboard,
     required this.cardCubit,
     required this.startPos,
     required this.endPos,
@@ -15,6 +16,7 @@ class OutletCardWidget extends StatefulWidget {
   final double startPos;
   final double endPos;
   final List<Currency> currencies;
+  final DashboardBloc dashboard;
   final CardHandlerCubit cardCubit;
 
   @override
@@ -27,10 +29,12 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
   late AnimationController controller;
   late Animation positionAnimation;
   late OutletCardWidgetBloc outletBloc;
+
   @override
   void initState() {
     super.initState();
     outletBloc = OutletCardWidgetBloc(
+        dashboard: widget.dashboard,
         cardHandlerCubit: widget.cardCubit,
         cardIndex: widget.index,
         initialAnimPos: widget.startPos);
@@ -129,12 +133,22 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
 
   Widget detailOutletDisplay() {
     const double upperCompHeight = 50;
-    final List<List<String>> services = [
-      ['Masuk', 'assets/btn_income.png'],
-      ['Keluar', 'assets/btn_outcome.png'],
-      ['Pindah', 'assets/btn_move.png'],
-      ['Mutasi', 'assets/btn_history.png'],
-      ['Kurs', 'assets/btn_kurs.png'],
+    final List<_ButtonService> services = [
+      _ButtonService(
+          title: 'Masuk',
+          assetPath: 'assets/btn_income.png',
+          onTap: () {
+            widget.dashboard.add(
+                DashboardNavigateToMasuk(currentOutletSub: widget.outletSub));
+          }),
+      _ButtonService(
+          title: 'Keluar', assetPath: 'assets/btn_outcome.png', onTap: () {}),
+      _ButtonService(
+          title: 'Pindah', assetPath: 'assets/btn_move.png', onTap: () {}),
+      _ButtonService(
+          title: 'Mutasi', assetPath: 'assets/btn_history.png', onTap: () {}),
+      _ButtonService(
+          title: 'Kurs', assetPath: 'assets/btn_kurs.png', onTap: () {}),
     ];
     return BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
       builder: (context, state) {
@@ -159,8 +173,8 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: services
-                                    .map((e) => serviceWidget(
-                                        title: e[0], imgPath: e[1]))
+                                    .map((service) =>
+                                        serviceWidget(service: service))
                                     .toList()),
                           ),
                           Container(
@@ -267,26 +281,28 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
   }
 
   Widget serviceWidget({
-    required String title,
-    required String imgPath,
+    required _ButtonService service,
   }) {
-    return SizedBox(
-      height: 50,
-      width: 50,
-      child: Column(children: [
-        SizedBox(
-          height: 31,
-          width: 50,
-          child: Image.asset(
-            imgPath,
-            fit: BoxFit.scaleDown,
+    return GestureDetector(
+      onTap: () => service.onTap(),
+      child: SizedBox(
+        height: 50,
+        width: 50,
+        child: Column(children: [
+          SizedBox(
+            height: 31,
+            width: 50,
+            child: Image.asset(
+              service.assetPath,
+              fit: BoxFit.scaleDown,
+            ),
           ),
-        ),
-        Text(
-          title,
-          style: blackFontStyle2.copyWith(color: mainColor),
-        )
-      ]),
+          Text(
+            service.title,
+            style: blackFontStyle2.copyWith(color: mainColor),
+          )
+        ]),
+      ),
     );
   }
 
@@ -303,6 +319,7 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
               child: ClipPath(
                 clipper: MyCustomClipper(),
                 child: GestureDetector(
+                  //TODO ON BACK BUTTON
                   // onTap: () => context.read<OutletCardWidgetBloc>().add(
                   //     OpenPanel(
                   //         toogle: !(state as OutletCardWidgetIdleState)
@@ -425,4 +442,15 @@ class DashedLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class _ButtonService {
+  String title;
+  String assetPath;
+  Function onTap;
+  _ButtonService({
+    required this.title,
+    required this.assetPath,
+    required this.onTap,
+  });
 }

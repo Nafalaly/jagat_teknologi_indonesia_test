@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:jagat_teknologi_indonesia_test/models/models.dart';
+import 'package:jagat_teknologi_indonesia_test/pages/dashboard_page/dashboard_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/pages/screens.dart';
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 import 'package:flutter/material.dart';

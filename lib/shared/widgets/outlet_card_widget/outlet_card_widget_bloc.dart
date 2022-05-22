@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:jagat_teknologi_indonesia_test/pages/dashboard_page/dashboard_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/shared/widgets/outlet_card_widget/cubit/card_handler_cubit.dart';
 import 'package:meta/meta.dart';
 
@@ -13,6 +14,7 @@ class OutletCardWidgetBloc
     extends Bloc<OutletCardWidgetEvent, OutletCardWidgetState> {
   OutletCardWidgetBloc(
       {required this.cardHandlerCubit,
+      required this.dashboard,
       required this.cardIndex,
       required double initialAnimPos})
       : super(OutletCardWidgetIdleState(
@@ -31,6 +33,7 @@ class OutletCardWidgetBloc
     on(mapEvent);
   }
   int cardIndex;
+  DashboardBloc dashboard;
   CardHandlerCubit cardHandlerCubit;
   late StreamSubscription cardListener;
 

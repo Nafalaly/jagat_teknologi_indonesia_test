@@ -10,7 +10,7 @@ abstract class DashboardState {
 
 class DashboardInitial extends DashboardState {}
 
-enum DashboardNavigator { Masuk, Keluar, Pindah, Mutasi, Kurs, Idle }
+enum DashboardNavigator { masuk, keluar, pindah, mutasi, kurs, idle }
 
 class DashboardIdleState extends DashboardState {
   Outlet? outlet;
@@ -19,7 +19,7 @@ class DashboardIdleState extends DashboardState {
 
   DashboardIdleState({
     int? index = 0,
-    this.navigator = DashboardNavigator.Idle,
+    this.navigator = DashboardNavigator.idle,
     this.dataStatus = const DataReload(),
     this.outlet,
   }) {
@@ -27,11 +27,15 @@ class DashboardIdleState extends DashboardState {
     outlet ??= Outlet();
   }
   DashboardState copyWith(
-      {int? currentIndex, DataState? dataStatus, Outlet? outlet}) {
+      {int? currentIndex,
+      DataState? dataStatus,
+      Outlet? outlet,
+      DashboardNavigator? navigator}) {
     return DashboardIdleState(
       index: currentIndex ?? currentIndexMenu,
       dataStatus: dataStatus ?? this.dataStatus,
       outlet: outlet ?? this.outlet,
+      navigator: navigator ?? this.navigator,
     );
   }
 }
