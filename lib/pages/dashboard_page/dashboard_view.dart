@@ -35,9 +35,12 @@ class Dashboard extends StatelessWidget {
                   )
                 ],
               ),
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [appMenus(context), bodyDisplay()],
+              body: Stack(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  bodyDisplay(),
+                  appMenus(context),
+                ],
               ))),
     );
   }
@@ -49,7 +52,8 @@ class Dashboard extends StatelessWidget {
           switch (state.currentIndexMenu) {
             case 0:
               return Container(
-                height: DeviceScreen.devHeight - 180,
+                margin: const EdgeInsets.only(top: 80),
+                height: DeviceScreen.devHeight,
                 width: DeviceScreen.devWidth,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -59,6 +63,8 @@ class Dashboard extends StatelessWidget {
                       .outlet!
                       .outletSubs
                       .map((e) => OutletCardWidget(
+                            endPos: 0,
+                            startPos: (DeviceScreen.devWidth - (80 + 20)) * -1,
                             outletSub: e,
                             currencies: state.outlet!.currencies,
                             cardCubit: context.read<CardHandlerCubit>(),
@@ -246,7 +252,7 @@ class BoxShadowPainter extends CustomPainter {
         size.width - value, size.height * 0.15, size.width, 0);
     garis.close();
 
-    canvas.drawShadow(garis, Colors.transparent, 5.0, false);
+    canvas.drawShadow(garis, Colors.black, 2.5, true);
   }
 
   @override

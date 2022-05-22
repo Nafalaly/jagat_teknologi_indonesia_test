@@ -10,12 +10,16 @@ abstract class DashboardState {
 
 class DashboardInitial extends DashboardState {}
 
+enum DashboardNavigator { Masuk, Keluar, Pindah, Mutasi, Kurs, Idle }
+
 class DashboardIdleState extends DashboardState {
   Outlet? outlet;
   final DataState dataStatus;
+  final DashboardNavigator navigator;
 
   DashboardIdleState({
     int? index = 0,
+    this.navigator = DashboardNavigator.Idle,
     this.dataStatus = const DataReload(),
     this.outlet,
   }) {

@@ -12,14 +12,17 @@ part 'outlet_card_widget_state.dart';
 class OutletCardWidgetBloc
     extends Bloc<OutletCardWidgetEvent, OutletCardWidgetState> {
   OutletCardWidgetBloc(
-      {required this.cardHandlerCubit, required this.cardIndex})
-      : super(OutletCardWidgetIdleState(index: cardIndex)) {
+      {required this.cardHandlerCubit,
+      required this.cardIndex,
+      required double initialAnimPos})
+      : super(OutletCardWidgetIdleState(
+            index: cardIndex, animXpos: initialAnimPos)) {
     cardListener = cardHandlerCubit.stream.listen((changes) {
       if (changes is CardHandlerIdleState) {
         if (changes.currentOpenedCard != null) {
           if (changes.currentOpenedCard !=
                   (state as OutletCardWidgetIdleState).index &&
-              (state as OutletCardWidgetIdleState).detailOpen) {
+              (state as OutletCardWidgetIdleState).panelStateOpen) {
             add(ClosePanel());
           }
         }
@@ -35,13 +38,25 @@ class OutletCardWidgetBloc
       OutletCardWidgetEvent event, Emitter<OutletCardWidgetState> emit) async {
     if (event is OpenPanel) {
       cardHandlerCubit.openACard(cardIndex: cardIndex);
-      emit((state as OutletCardWidgetIdleState).copyWith(detailOpen: true));
+      emit((state as OutletCardWidgetIdleState).copyWith(
+          panelStateOpen: true, animationState: const PanelAnimationIdle()));
     } else if (event is ClosePanel) {
       if ((cardHandlerCubit.state as CardHandlerIdleState).currentOpenedCard ==
           cardIndex) {
         cardHandlerCubit.closeCard();
       }
-      emit((state as OutletCardWidgetIdleState).copyWith(detailOpen: false));
+      emit((state as OutletCardWidgetIdleState).copyWith(
+          panelStateOpen: false, animationState: const PanelAnimationIdle()));
+    } else if (event is AnimationChanges) {
+      emit((state as OutletCardWidgetIdleState).copyWith(
+          animXpos: event.position,
+          animationState: const PanelAnimationInProgress()));
+    } else if (event is AnimationCompleted) {
+      emit((state as OutletCardWidgetIdleState)
+          .copyWith(animationState: const PanelAnimationIdle()));
+    } else if (event is AnimationStarting) {
+      emit((state as OutletCardWidgetIdleState)
+          .copyWith(animationState: const PanelAnimationInProgress()));
     }
   }
 

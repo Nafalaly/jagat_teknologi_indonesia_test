@@ -1,71 +1,124 @@
 part of '../../shared.dart';
 
-class OutletCardWidget extends StatelessWidget {
+class OutletCardWidget extends StatefulWidget {
   const OutletCardWidget({
     Key? key,
     required this.outletSub,
     required this.currencies,
     required this.index,
     required this.cardCubit,
+    required this.startPos,
+    required this.endPos,
   }) : super(key: key);
   final OutletSub outletSub;
   final int index;
+  final double startPos;
+  final double endPos;
   final List<Currency> currencies;
-  final double widgetHeight = 160;
   final CardHandlerCubit cardCubit;
+
+  @override
+  State<OutletCardWidget> createState() => _OutletCardWidgetState();
+}
+
+class _OutletCardWidgetState extends State<OutletCardWidget>
+    with SingleTickerProviderStateMixin {
+  final double widgetHeight = 160;
+  late AnimationController controller;
+  late Animation positionAnimation;
+  late OutletCardWidgetBloc outletBloc;
+  @override
+  void initState() {
+    super.initState();
+    outletBloc = OutletCardWidgetBloc(
+        cardHandlerCubit: widget.cardCubit,
+        cardIndex: widget.index,
+        initialAnimPos: widget.startPos);
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 250))
+      ..addListener(() {
+        outletBloc.add(AnimationChanges(position: positionAnimation.value));
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          outletBloc.add(AnimationCompleted());
+        }
+      });
+    positionAnimation = Tween<double>(
+            begin: widget.startPos, end: widget.endPos)
+        .animate(CurvedAnimation(parent: controller, curve: Curves.bounceIn));
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          OutletCardWidgetBloc(cardHandlerCubit: cardCubit, cardIndex: index),
+      create: (context) => outletBloc,
       child: BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
         builder: (context, state) {
-          return Container(
-            height: widgetHeight,
-            width: DeviceScreen.devWidth,
-            margin: const EdgeInsets.only(top: 10),
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-              child: Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  outletDisplay(),
-                  (state as OutletCardWidgetIdleState).detailOpen
-                      ? GestureDetector(
-                          onTap: () => context
-                              .read<OutletCardWidgetBloc>()
-                              .add(ClosePanel()),
-                          child: Container(
-                            height: widgetHeight,
-                            width: DeviceScreen.devWidth,
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        )
-                      : const SizedBox(),
-                  detailOutletDisplay(),
-                  (state).detailOpen
-                      ? const SizedBox()
-                      : GestureDetector(
-                          onTap: () => context
-                              .read<OutletCardWidgetBloc>()
-                              .add(OpenPanel()),
-                          child: Container(
+          return BlocListener<OutletCardWidgetBloc, OutletCardWidgetState>(
+            listener: (context, state) {
+              if ((state as OutletCardWidgetIdleState).panelStateOpen &&
+                  state.animationState is PanelAnimationIdle) {
+                controller.forward();
+                context.read<OutletCardWidgetBloc>().add(AnimationStarting());
+              } else if (!(state).panelStateOpen &&
+                  state.animationState is PanelAnimationIdle) {
+                controller.reverse();
+                context.read<OutletCardWidgetBloc>().add(AnimationStarting());
+              }
+            },
+            child: Container(
+              height: widgetHeight,
+              width: DeviceScreen.devWidth,
+              margin: const EdgeInsets.only(top: 10),
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                child: Stack(
+                  alignment: Alignment.centerRight,
+                  children: [
+                    outletDisplay(),
+                    (state as OutletCardWidgetIdleState).panelStateOpen
+                        ? GestureDetector(
+                            onTap: () => context
+                                .read<OutletCardWidgetBloc>()
+                                .add(ClosePanel()),
+                            child: Container(
                               height: widgetHeight,
-                              width: 50,
-                              color: Colors.transparent)),
-                ],
+                              width: DeviceScreen.devWidth,
+                              color: Colors.white.withOpacity(0.7),
+                            ),
+                          )
+                        : const SizedBox(),
+                    detailOutletDisplay(),
+                    (state).panelStateOpen
+                        ? const SizedBox()
+                        : GestureDetector(
+                            onTap: () => context
+                                .read<OutletCardWidgetBloc>()
+                                .add(OpenPanel()),
+                            child: Container(
+                                height: widgetHeight,
+                                width: 50,
+                                color: Colors.transparent)),
+                  ],
+                ),
               ),
             ),
           );
@@ -86,9 +139,7 @@ class OutletCardWidget extends StatelessWidget {
     return BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
       builder: (context, state) {
         return Positioned(
-          right: (state as OutletCardWidgetIdleState).detailOpen
-              ? 0
-              : (DeviceScreen.devWidth - (80 + 20)) * -1,
+          right: (state as OutletCardWidgetIdleState).animXpos,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -98,7 +149,7 @@ class OutletCardWidget extends StatelessWidget {
                 width: DeviceScreen.devWidth - (20 + 60),
                 color: secondColor,
                 padding: const EdgeInsets.all(15),
-                child: (state).detailOpen
+                child: (state).panelStateOpen
                     ? Column(
                         children: [
                           SizedBox(
@@ -134,7 +185,7 @@ class OutletCardWidget extends StatelessWidget {
                                     leaderText: 'Jumlah Barang',
                                     isHeader: true),
                                 Column(
-                                    children: currencies
+                                    children: widget.currencies
                                         .map((e) => detailTextInformationWidget(
                                             trailingText: dummyValue(e),
                                             leaderText: e.currencyName))
@@ -266,7 +317,7 @@ class OutletCardWidget extends StatelessWidget {
                         const EdgeInsets.only(left: 15, right: 15, bottom: 5),
                     alignment: Alignment.topCenter,
                     child: Icon(
-                        (state as OutletCardWidgetIdleState).detailOpen
+                        (state as OutletCardWidgetIdleState).panelStateOpen
                             ? Icons.arrow_circle_up_outlined
                             : Icons.add_circle_outline_outlined,
                         color: mainColor,
@@ -292,13 +343,13 @@ class OutletCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            outletSub.outletName,
+            widget.outletSub.outletName,
             style: blackFontStyle2.copyWith(
                 color: mainColor, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 7),
           Column(
-              children: currencies
+              children: widget.currencies
                   .map((e) => currencyWidget(symbol: e.currencyName))
                   .toList())
         ],
