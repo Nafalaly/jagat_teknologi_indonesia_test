@@ -4,26 +4,12 @@ class Dashboard extends StatelessWidget {
   const Dashboard({Key? key}) : super(key: key);
   final int currentIndex = 0;
 
-  void navigatorHandler(DashboardNavigator navigator, BuildContext context) {
-    switch (navigator) {
-      case DashboardNavigator.masuk:
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return const IncomeServicePage();
-        }));
-        context.read<DashboardBloc>().add(DashboardNavigatingToOtherPage());
-        break;
-      default:
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => CardHandlerCubit()),
         BlocProvider(create: (context) => OutletCubit()),
+        BlocProvider(create: (context) => CardHandlerCubit()),
         BlocProvider(
             create: (context) =>
                 DashboardBloc(outletCubit: context.read<OutletCubit>())
@@ -32,7 +18,45 @@ class Dashboard extends StatelessWidget {
       child: BlocListener<DashboardBloc, DashboardState>(
         listener: (context, state) {
           if (state is DashboardIdleState) {
-            navigatorHandler(state.navigator, context);
+            if (state.navigator is DashboardToMasuk) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext _) {
+                return IncomeServicePage(
+                  currentOutletSub:
+                      (state.navigator as DashboardToMasuk).currentOutletSub,
+                  availableOutletSub:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .outletSubs,
+                  currencies:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .currencies,
+                );
+              }));
+              context
+                  .read<DashboardBloc>()
+                  .add(DashboardNavigatingToOtherPage());
+            } else if (state.navigator is DashboardToKeluar) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext _) {
+                return OutcomeServicePage(
+                  currentOutletSub:
+                      (state.navigator as DashboardToKeluar).currentOutletSub,
+                  availableOutletSub:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .outletSubs,
+                  currencies:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .currencies,
+                );
+              }));
+              context
+                  .read<DashboardBloc>()
+                  .add(DashboardNavigatingToOtherPage());
+            }
           }
         },
         child: SafeArea(
@@ -80,19 +104,21 @@ class Dashboard extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: ListView(
                   shrinkWrap: true,
-                  children: (state)
-                      .outlet!
-                      .outletSubs
-                      .map((e) => OutletCardWidget(
-                            endPos: 0,
-                            dashboard: context.read<DashboardBloc>(),
-                            startPos: (DeviceScreen.devWidth - (80 + 20)) * -1,
-                            outletSub: e,
-                            currencies: state.outlet!.currencies,
-                            cardCubit: context.read<CardHandlerCubit>(),
-                            index: (state).outlet!.outletSubs.indexOf(e),
-                          ))
-                      .toList(),
+                  children: [
+                    for (int i = 0; i < (state).outlet!.outletSubs.length; i++)
+                      Container(
+                        padding: EdgeInsets.only(top: i == 0 ? 20 : 0),
+                        child: OutletCardWidget(
+                          endPos: 0,
+                          dashboard: context.read<DashboardBloc>(),
+                          startPos: (DeviceScreen.devWidth - (80 + 20)) * -1,
+                          outletSub: (state).outlet!.outletSubs[i],
+                          currencies: state.outlet!.currencies,
+                          cardCubit: context.read<CardHandlerCubit>(),
+                          index: i,
+                        ),
+                      )
+                  ],
                 ),
               );
             default:

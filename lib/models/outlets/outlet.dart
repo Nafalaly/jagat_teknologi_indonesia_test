@@ -63,6 +63,7 @@ class Outlet {
 }
 
 class OutletSub {
+  OutletSub();
   late String id;
   late String outletName;
   late String parentId;

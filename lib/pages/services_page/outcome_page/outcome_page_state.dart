@@ -1,9 +1,9 @@
 // ignore_for_file: must_be_immutable
 
-part of 'income_page_bloc.dart';
+part of 'outcome_page_bloc.dart';
 
 @immutable
-abstract class IncomePageState {
+abstract class OutcomePageState {
   late List<Currency> availableCurrencies = [];
   late List<OutletSub> availableOutletSub = [];
   late UserData currentUser = UserData();
@@ -14,14 +14,14 @@ abstract class IncomePageState {
   late List<File> pictures = [];
   late double inputValue = 0;
   late String desc = '';
-  late IncomeInputState inputState = const IncomeFormInputIdle();
+  late OutcomeInputState inputState = const OutcomeFormInputIdle();
 }
 
-class IncomePageInitial extends IncomePageState {}
+class OutcomePageInitial extends OutcomePageState {}
 
-class IncomePageErrorState extends IncomePageState {
+class OutcomePageErrorState extends OutcomePageState {
   final String errorMessage;
-  IncomePageErrorState({required this.errorMessage});
+  OutcomePageErrorState({required this.errorMessage});
 }
 
 class PictureWidget {
@@ -31,7 +31,7 @@ class PictureWidget {
   PictureWidget({this.isDummy = true, this.fileImg});
 }
 
-class IncomePageIdleState extends IncomePageState {
+class OutcomePageIdleState extends OutcomePageState {
   List<PictureWidget> getPicturesWidget() {
     List<PictureWidget> finalWidget =
         List.generate(4, (index) => PictureWidget());
@@ -59,7 +59,7 @@ class IncomePageIdleState extends IncomePageState {
     return null;
   }
 
-  IncomePageIdleState.setInitialData({
+  OutcomePageIdleState.setInitialData({
     required List<Currency> availableCurrencies,
     required List<OutletSub> availableOutletSub,
     required OutletSub currentOutletSub,
@@ -75,7 +75,7 @@ class IncomePageIdleState extends IncomePageState {
     startDate = DateTime.now();
   }
 
-  IncomePageIdleState({
+  OutcomePageIdleState({
     DateTime? time,
     Currency? currency,
     OutletSub? outletSub,
@@ -86,7 +86,7 @@ class IncomePageIdleState extends IncomePageState {
     double inputValue = 0,
     String desc = '',
     ConnectivityState? connectionStatus,
-    IncomeInputState inputState = const IncomeFormInputIdle(),
+    OutcomeInputState inputState = const OutcomeFormInputIdle(),
   }) {
     super.inputState = inputState;
     super.inputValue = inputValue;
@@ -119,7 +119,7 @@ class IncomePageIdleState extends IncomePageState {
     }
   }
 
-  IncomePageIdleState copyWith({
+  OutcomePageIdleState copyWith({
     DateTime? time,
     Currency? currency,
     List<File>? pictures,
@@ -130,9 +130,9 @@ class IncomePageIdleState extends IncomePageState {
     UserData? userData,
     OutletSub? outletSub,
     ConnectivityState? connectionStatus,
-    IncomeInputState? inputState,
+    OutcomeInputState? inputState,
   }) {
-    return IncomePageIdleState(
+    return OutcomePageIdleState(
       userData: userData ?? currentUser,
       time: time ?? startDate,
       desc: desc ?? this.desc,
@@ -148,28 +148,28 @@ class IncomePageIdleState extends IncomePageState {
   }
 }
 
-abstract class IncomeInputState {
-  const IncomeInputState();
+abstract class OutcomeInputState {
+  const OutcomeInputState();
 }
 
-class IncomeFormSubmitting extends IncomeInputState {}
+class OutcomeFormSubmitting extends OutcomeInputState {}
 
-class IncomeFormSuccess extends IncomeInputState {}
+class OutcomeFormSuccess extends OutcomeInputState {}
 
-class IncomeFormFailed extends IncomeInputState {
+class OutcomeFormFailed extends OutcomeInputState {
   final String message;
-  IncomeFormFailed({required this.message});
+  OutcomeFormFailed({required this.message});
 }
 
-class IncomeFormInteruptedByConnection extends IncomeInputState {
-  const IncomeFormInteruptedByConnection();
+class OutcomeFormInteruptedByConnection extends OutcomeInputState {
+  const OutcomeFormInteruptedByConnection();
 }
 
-class IncomeFormBadInputState extends IncomeInputState {
+class OutcomeFormBadInputState extends OutcomeInputState {
   final String message;
-  IncomeFormBadInputState({required this.message});
+  OutcomeFormBadInputState({required this.message});
 }
 
-class IncomeFormInputIdle extends IncomeInputState {
-  const IncomeFormInputIdle();
+class OutcomeFormInputIdle extends OutcomeInputState {
+  const OutcomeFormInputIdle();
 }

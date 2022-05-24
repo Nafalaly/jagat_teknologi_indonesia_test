@@ -21,6 +21,11 @@ class DashboardNavigateToMasuk extends DashboardEvent {
   DashboardNavigateToMasuk({required this.currentOutletSub});
 }
 
+class DashboardNavigateToKeluar extends DashboardEvent {
+  final OutletSub currentOutletSub;
+  DashboardNavigateToKeluar({required this.currentOutletSub});
+}
+
 class DashboardSwitchToMenu extends DashboardEvent {
   final int switchToIndex;
   DashboardSwitchToMenu({required this.switchToIndex});

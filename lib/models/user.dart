@@ -3,14 +3,14 @@
 part of 'models.dart';
 
 class UserData {
-  late String userId;
-  late String language;
-  late String fullName;
-  late String phone;
-  late String emailAddress;
-  late UserStatus role;
-  late String? designation;
-  late String? outletId;
+  String userId = '';
+  String language = '';
+  String fullName = '';
+  String phone = '';
+  String emailAddress = '';
+  UserStatus role = UserStatus.defaultStatus;
+  String? designation = '';
+  String? outletId = '';
   bool statusLog = false;
   String token = 'No Token';
   UserData();

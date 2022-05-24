@@ -14,7 +14,7 @@ class LoginIdleState extends LoginState {
   bool usernameValidator() => username != '';
   bool passwordValidator() => password != '';
   bool passwordVisible;
-  InputState inputState;
+  LoginInputState inputState;
   ConnectivityState connectionStatus;
 
   LoginIdleState({
@@ -30,7 +30,7 @@ class LoginIdleState extends LoginState {
       String? password,
       bool? passwordVisible,
       ConnectivityState? connectionStatus,
-      InputState? inputState}) {
+      LoginInputState? inputState}) {
     return LoginIdleState(
       username: username ?? this.username,
       password: password ?? this.password,
@@ -41,21 +41,21 @@ class LoginIdleState extends LoginState {
   }
 }
 
-abstract class InputState {
-  const InputState();
+abstract class LoginInputState {
+  const LoginInputState();
 }
 
-class LoginFormInteruptedByConnection extends InputState {
+class LoginFormInteruptedByConnection extends LoginInputState {
   const LoginFormInteruptedByConnection();
 }
 
-class LoginFormAccountNotFound extends InputState {}
+class LoginFormAccountNotFound extends LoginInputState {}
 
-class LoginFormBadInputState extends InputState {
+class LoginFormBadInputState extends LoginInputState {
   final String message;
   LoginFormBadInputState({required this.message});
 }
 
-class LoginFormInputIdle extends InputState {
+class LoginFormInputIdle extends LoginInputState {
   const LoginFormInputIdle();
 }

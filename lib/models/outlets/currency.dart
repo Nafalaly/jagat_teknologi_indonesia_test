@@ -1,6 +1,9 @@
 part of '../models.dart';
 
 class Currency {
+  Currency() {
+    id = currencyLogo = currencyDesc = currencyName = 'No Data';
+  }
   late String id;
   late String currencyName;
   late String currencyLogo;

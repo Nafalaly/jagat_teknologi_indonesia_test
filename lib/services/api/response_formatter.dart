@@ -9,7 +9,8 @@ class ResponseParser {
   }
   ResponseParser.parse({required dynamic mapData}) {
     _meta = _Meta.createMeta(mapData: mapData['status']);
-    _data = mapData['data'];
+    // ignore: unnecessary_null_in_if_null_operators
+    _data = mapData['data'] ?? null;
   }
 
   ResponseParser.error({dynamic mapData}) {

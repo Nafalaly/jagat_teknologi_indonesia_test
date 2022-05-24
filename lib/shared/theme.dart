@@ -27,7 +27,7 @@ TextStyle blackFontStyle2 = GoogleFonts.poppins()
 TextStyle blackFontStyle3 = GoogleFonts.poppins().copyWith(color: Colors.black);
 
 TextStyle headerFontStyle = GoogleFonts.poppins()
-    .copyWith(color: Colors.black, fontSize: 50, fontWeight: FontWeight.w500);
+    .copyWith(color: Colors.black, fontSize: 25, fontWeight: FontWeight.w800);
 TextStyle headerFontStyle2 = GoogleFonts.poppins()
     .copyWith(color: Colors.black, fontSize: 32, fontWeight: FontWeight.w500);
 
@@ -41,7 +41,8 @@ String priceFormat({required double format, String? symbol = 'IDR'}) {
 }
 
 String dateFormat(DateTime time) {
-  return DateFormat.yMMMMd('en_US').format(time);
+  // return DateFormat.yMMMMd('en_US').format(time);
+  return DateFormat.yMd('en_US').format(time);
 }
 
 String dateFormatMonthYearOnly(DateTime time) {

@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
+part 'dashboard_navigator.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc({required this.outletCubit}) : super(DashboardInitial()) {
@@ -38,10 +39,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(DashboardIdleState(index: state.currentIndexMenu));
     } else if (event is DashboardNavigatingToOtherPage) {
       emit((state as DashboardIdleState)
-          .copyWith(navigator: DashboardNavigator.idle));
+          .copyWith(navigator: const DashboardNavigatorIdle()));
     } else if (event is DashboardNavigateToMasuk) {
-      emit((state as DashboardIdleState)
-          .copyWith(navigator: DashboardNavigator.masuk));
+      emit((state as DashboardIdleState).copyWith(
+          navigator:
+              DashboardToMasuk(currentOutletSub: event.currentOutletSub)));
+    } else if (event is DashboardNavigateToKeluar) {
+      emit((state as DashboardIdleState).copyWith(
+          navigator:
+              DashboardToKeluar(currentOutletSub: event.currentOutletSub)));
     }
   }
 

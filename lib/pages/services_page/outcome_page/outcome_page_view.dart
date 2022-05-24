@@ -2,8 +2,8 @@
 
 part of '../../screens.dart';
 
-class IncomeServicePage extends StatelessWidget {
-  IncomeServicePage({
+class OutcomeServicePage extends StatelessWidget {
+  OutcomeServicePage({
     Key? key,
     required this.currentOutletSub,
     required this.currencies,
@@ -22,7 +22,7 @@ class IncomeServicePage extends StatelessWidget {
   Widget build(BuildContext context) {
     padding = MediaQuery.of(context).padding.top;
     return BlocProvider(
-      create: (context) => IncomePageBloc(
+      create: (context) => OutcomePageBloc(
           current:
               (context.read<UserAccountCubit>().state as UserAccountAttached)
                   .accountData,
@@ -30,32 +30,32 @@ class IncomeServicePage extends StatelessWidget {
           availableCurrencies: currencies,
           availableOutletSub: availableOutletSub,
           connection: context.read<ConnectivityCubit>()),
-      child: BlocBuilder<IncomePageBloc, IncomePageState>(
+      child: BlocBuilder<OutcomePageBloc, OutcomePageState>(
         builder: (context, state) {
-          if (state is IncomePageIdleState) {
-            return BlocListener<IncomePageBloc, IncomePageState>(
+          if (state is OutcomePageIdleState) {
+            return BlocListener<OutcomePageBloc, OutcomePageState>(
               listener: (context, state) {
-                if ((state as IncomePageIdleState).inputState
-                    is IncomeFormInteruptedByConnection) {
+                if ((state as OutcomePageIdleState).inputState
+                    is OutcomeFormInteruptedByConnection) {
                   showWarning(
                       message: 'Tidak terhubung ke Internet',
                       color: Colors.black,
                       context: context,
                       onFinish: () {
                         context
-                            .read<IncomePageBloc>()
-                            .add(IncomeConnectionWarningDismiss());
+                            .read<OutcomePageBloc>()
+                            .add(OutcomeConnectionWarningDismiss());
                       });
                 }
-                if (state.inputState is IncomeFormBadInputState) {
+                if (state.inputState is OutcomeFormBadInputState) {
                   showWarning(
-                      message:
-                          (state.inputState as IncomeFormBadInputState).message,
+                      message: (state.inputState as OutcomeFormBadInputState)
+                          .message,
                       context: context,
                       onFinish: () {
                         context
-                            .read<IncomePageBloc>()
-                            .add(IncomeDismissBadInput());
+                            .read<OutcomePageBloc>()
+                            .add(OutcomeDismissBadInput());
                       });
                 }
               },
@@ -71,7 +71,7 @@ class IncomeServicePage extends StatelessWidget {
                       icon: Icon(Icons.arrow_back_ios, color: mainColor)),
                   backgroundColor: Colors.white,
                   centerTitle: true,
-                  title: Text('Masuk',
+                  title: Text('Keluar',
                       style: headerFontStyle.copyWith(color: mainColor)),
                 ),
                 body: ListView(children: [headerComp(), mainComp()]),
@@ -86,9 +86,9 @@ class IncomeServicePage extends StatelessWidget {
   }
 
   Widget headerComp() {
-    return BlocBuilder<IncomePageBloc, IncomePageState>(
+    return BlocBuilder<OutcomePageBloc, OutcomePageState>(
       builder: (context, state) {
-        if (state is IncomePageIdleState) {
+        if (state is OutcomePageIdleState) {
           return Container(
             height: 80,
             width: DeviceScreen.devWidth,
@@ -127,8 +127,8 @@ class IncomeServicePage extends StatelessWidget {
                           ))
                       .toList(),
                   onChanged: (val) {
-                    context.read<IncomePageBloc>().add(
-                        IncomeSubOutletChangeEvent(
+                    context.read<OutcomePageBloc>().add(
+                        OutcomeSubOutletChangeEvent(
                             newOutlet: val as OutletSub));
                   },
                   offset: const Offset(-10, -10),
@@ -142,7 +142,7 @@ class IncomeServicePage extends StatelessWidget {
         } else {
           return Center(
             child: Text(
-              (state as IncomePageErrorState).errorMessage,
+              (state as OutcomePageErrorState).errorMessage,
               style: blackFontStyle.copyWith(color: Colors.red),
             ),
           );
@@ -152,9 +152,9 @@ class IncomeServicePage extends StatelessWidget {
   }
 
   Widget mainComp() {
-    return BlocBuilder<IncomePageBloc, IncomePageState>(
+    return BlocBuilder<OutcomePageBloc, OutcomePageState>(
       builder: (context, state) {
-        if (state is IncomePageIdleState) {
+        if (state is OutcomePageIdleState) {
           return GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Container(
@@ -183,8 +183,8 @@ class IncomeServicePage extends StatelessWidget {
                             onPressed: () {
                               FocusManager.instance.primaryFocus?.unfocus();
                               context
-                                  .read<IncomePageBloc>()
-                                  .add(IncomeSubmitAttemptEvent());
+                                  .read<OutcomePageBloc>()
+                                  .add(OutcomeSubmitAttemptEvent());
                             },
                             style: ButtonStyle(
                                 elevation: MaterialStateProperty.all(5),
@@ -227,7 +227,7 @@ class IncomeServicePage extends StatelessWidget {
         } else {
           return Center(
             child: Text(
-              (state as IncomePageErrorState).errorMessage,
+              (state as OutcomePageErrorState).errorMessage,
               style: blackFontStyle.copyWith(color: Colors.red),
             ),
           );
@@ -237,7 +237,7 @@ class IncomeServicePage extends StatelessWidget {
   }
 
   Widget startDateWidget(BuildContext context) {
-    return BlocBuilder<IncomePageBloc, IncomePageState>(
+    return BlocBuilder<OutcomePageBloc, OutcomePageState>(
       builder: (context, state) {
         return Column(children: [
           Text('Start Date',
@@ -248,8 +248,8 @@ class IncomeServicePage extends StatelessWidget {
                 context,
                 onConfirm: (val) {
                   context
-                      .read<IncomePageBloc>()
-                      .add(IncomeStartDateChangeEvent(newDate: val));
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeStartDateChangeEvent(newDate: val));
                 },
                 maxTime: DateTime.now(),
               );
@@ -263,7 +263,7 @@ class IncomeServicePage extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: Text(
-                dateFormat((state as IncomePageIdleState).startDate),
+                dateFormat((state as OutcomePageIdleState).startDate),
                 style: blackFontStyle3.copyWith(
                     color: mainColor, fontWeight: FontWeight.bold),
               ),
@@ -275,7 +275,7 @@ class IncomeServicePage extends StatelessWidget {
   }
 
   Widget descWidget(BuildContext context) {
-    return BlocBuilder<IncomePageBloc, IncomePageState>(
+    return BlocBuilder<OutcomePageBloc, OutcomePageState>(
       builder: (context, state) {
         return Column(
           children: [
@@ -296,8 +296,8 @@ class IncomeServicePage extends StatelessWidget {
                     child: TextField(
                       controller: descController,
                       onChanged: (val) => context
-                          .read<IncomePageBloc>()
-                          .add(IncomeDescriptionChangeEvent(newDesc: val)),
+                          .read<OutcomePageBloc>()
+                          .add(OutcomeDescriptionChangeEvent(newDesc: val)),
                       style: blackFontStyle2.copyWith(
                           color: mainColor, fontWeight: FontWeight.bold),
                       textAlignVertical: TextAlignVertical.center,
@@ -317,7 +317,7 @@ class IncomeServicePage extends StatelessWidget {
   }
 
   Widget inputWidget(BuildContext context) {
-    return BlocBuilder<IncomePageBloc, IncomePageState>(
+    return BlocBuilder<OutcomePageBloc, OutcomePageState>(
       builder: (context, state) {
         return Column(
           children: [
@@ -340,8 +340,8 @@ class IncomeServicePage extends StatelessWidget {
                       controller: valueController,
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.number,
-                      onChanged: (val) => context.read<IncomePageBloc>().add(
-                          IncomeInputValueChangeEvent(
+                      onChanged: (val) => context.read<OutcomePageBloc>().add(
+                          OutcomeInputValueChangeEvent(
                               newValue: double.parse(val))),
                       style: blackFontStyle2.copyWith(
                           color: mainColor, fontWeight: FontWeight.bold),
@@ -377,7 +377,7 @@ class IncomeServicePage extends StatelessWidget {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton2(
                         autofocus: true,
-                        value: (state as IncomePageIdleState).selectedCurrency,
+                        value: (state as OutcomePageIdleState).selectedCurrency,
                         dropdownMaxHeight: 200,
                         dropdownWidth: 150,
                         scrollbarAlwaysShow: true,
@@ -392,8 +392,8 @@ class IncomeServicePage extends StatelessWidget {
                                 ))
                             .toList(),
                         onChanged: (val) {
-                          context.read<IncomePageBloc>().add(
-                              IncomeCurrencyChangeEvent(
+                          context.read<OutcomePageBloc>().add(
+                              OutcomeCurrencyChangeEvent(
                                   newCurrency: val as Currency));
                         },
                         offset: const Offset(-10, -10),
@@ -415,7 +415,7 @@ class IncomeServicePage extends StatelessWidget {
   Widget uploadPicturesWidget(BuildContext context) {
     double allocatedWidthSize = DeviceScreen.devWidth - (20);
     double allocatedHeightSize = 70;
-    return BlocBuilder<IncomePageBloc, IncomePageState>(
+    return BlocBuilder<OutcomePageBloc, OutcomePageState>(
       builder: (context, state) {
         return Column(
           children: [
@@ -432,7 +432,7 @@ class IncomeServicePage extends StatelessWidget {
               child: Builder(builder: (_) {
                 bool allowPicturesToAdd = true;
                 try {
-                  if ((state as IncomePageIdleState)
+                  if ((state as OutcomePageIdleState)
                           .getPicturesWidget()
                           .where((element) => !element.isDummy)
                           .length ==
@@ -447,10 +447,10 @@ class IncomeServicePage extends StatelessWidget {
                   children: List.generate(
                       allowPicturesToAdd
                           ? 3
-                          : (state as IncomePageIdleState)
+                          : (state as OutcomePageIdleState)
                               .getPicturesWidget()
                               .length, (index) {
-                    if ((state as IncomePageIdleState)
+                    if ((state as OutcomePageIdleState)
                         .getPicturesWidget()[index]
                         .isDummy) {
                       return Container(
@@ -562,8 +562,8 @@ class IncomeServicePage extends StatelessWidget {
                 onPressed: () async {
                   Navigator.pop(context);
                   context
-                      .read<IncomePageBloc>()
-                      .add(IncomeRemovePictureEvent(indexPicture: index));
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeRemovePictureEvent(indexPicture: index));
                 },
                 child: const Text('Hapus'),
               ),
@@ -584,8 +584,8 @@ class IncomeServicePage extends StatelessWidget {
                 onPressed: () async {
                   Navigator.pop(context);
                   context
-                      .read<IncomePageBloc>()
-                      .add(IncomeAddPicture(source: ImageSource.gallery));
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeAddPicture(source: ImageSource.gallery));
                 },
               ),
               CupertinoDialogAction(
@@ -593,8 +593,8 @@ class IncomeServicePage extends StatelessWidget {
                 onPressed: () async {
                   Navigator.pop(context);
                   context
-                      .read<IncomePageBloc>()
-                      .add(IncomeAddPicture(source: ImageSource.camera));
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeAddPicture(source: ImageSource.camera));
                 },
               ),
             ],

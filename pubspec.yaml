@@ -43,6 +43,11 @@ dependencies:
   intl: ^0.17.0
   flutter_bloc: ^8.0.1
   connectivity_plus: ^2.3.0
+  dropdown_button2: ^1.5.2
+  tutorial_coach_mark: ^1.2.3
+  image_picker: ^0.8.5+3
+  image_cropper: ^2.0.3
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:

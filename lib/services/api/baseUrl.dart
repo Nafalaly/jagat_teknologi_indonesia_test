@@ -10,4 +10,5 @@ class BaseUrl {
   static String loginToAccount = '${_baseURL}Auth';
 
   static String initialData = '${_baseURL}Auth/initData';
+  static String incomeService = '${_baseURL}Trx/Add';
 }

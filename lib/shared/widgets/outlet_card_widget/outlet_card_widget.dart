@@ -50,7 +50,7 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
       });
     positionAnimation = Tween<double>(
             begin: widget.startPos, end: widget.endPos)
-        .animate(CurvedAnimation(parent: controller, curve: Curves.bounceIn));
+        .animate(CurvedAnimation(parent: controller, curve: Curves.bounceOut));
   }
 
   @override
@@ -142,7 +142,12 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
                 DashboardNavigateToMasuk(currentOutletSub: widget.outletSub));
           }),
       _ButtonService(
-          title: 'Keluar', assetPath: 'assets/btn_outcome.png', onTap: () {}),
+          title: 'Keluar',
+          assetPath: 'assets/btn_outcome.png',
+          onTap: () {
+            widget.dashboard.add(
+                DashboardNavigateToKeluar(currentOutletSub: widget.outletSub));
+          }),
       _ButtonService(
           title: 'Pindah', assetPath: 'assets/btn_move.png', onTap: () {}),
       _ButtonService(
@@ -161,8 +166,18 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
               Container(
                 height: widgetHeight,
                 width: DeviceScreen.devWidth - (20 + 60),
-                color: secondColor,
                 padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: secondColor,
+                  // boxShadow: const [
+                  //   BoxShadow(
+                  //     color: Colors.black12,
+                  //     spreadRadius: 1,
+                  //     blurRadius: 4,
+                  //     offset: Offset(-3, 0),
+                  //   ),
+                  // ],
+                ),
                 child: (state).panelStateOpen
                     ? Column(
                         children: [
