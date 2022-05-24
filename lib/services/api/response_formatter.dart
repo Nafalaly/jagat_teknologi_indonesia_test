@@ -38,7 +38,7 @@ class _Meta {
     responseCode = 501;
   }
   _Meta.createMeta({required dynamic mapData}) {
-    responseCode = mapData['error'];
+    responseCode = mapData['code'] ?? 501;
     message = mapData['message'] ?? 'No Message from server';
     if (mapData['error'] == 0) {
       status = ResponseStatus.success;

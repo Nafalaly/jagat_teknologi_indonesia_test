@@ -14,11 +14,13 @@ class DashboardIdleState extends DashboardState {
   Outlet? outlet;
   final DataState dataStatus;
   final DashboardNavigator navigator;
+  final ConnectivityState connectionState;
 
   DashboardIdleState({
     int? index = 0,
+    this.connectionState = const InternetConnected(),
     this.navigator = const DashboardNavigatorIdle(),
-    this.dataStatus = const DataReload(),
+    this.dataStatus = const DataReloading(),
     this.outlet,
   }) {
     super.currentIndexMenu = index!;
@@ -28,8 +30,10 @@ class DashboardIdleState extends DashboardState {
       {int? currentIndex,
       DataState? dataStatus,
       Outlet? outlet,
+      ConnectivityState? connectionState,
       DashboardNavigator? navigator}) {
     return DashboardIdleState(
+      connectionState: connectionState ?? this.connectionState,
       index: currentIndex ?? currentIndexMenu,
       dataStatus: dataStatus ?? this.dataStatus,
       outlet: outlet ?? this.outlet,
@@ -42,8 +46,12 @@ abstract class DataState {
   const DataState();
 }
 
-class DataReload extends DataState {
-  const DataReload();
+class DataReloading extends DataState {
+  const DataReloading();
+}
+
+class DataInteruptedByNetworkProblem extends DataState {
+  const DataInteruptedByNetworkProblem();
 }
 
 class DataLoaded extends DataState {

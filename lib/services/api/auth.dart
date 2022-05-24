@@ -24,4 +24,27 @@ class APIUserService {
       return parser;
     }
   }
+
+  Future<ResponseParser> backgroundHit() async {
+    ResponseParser parser = ResponseParser();
+    try {
+      final Map data = {
+        "nama": "Nafal Aly",
+        "email": "nafalaly@gmail.com",
+        "nohp": "089670466744",
+      };
+
+      final Response responseku =
+          await dio.post(BaseUrl.backroundHit, data: json.encode(data));
+      parser = ResponseParser.parse(mapData: responseku.data);
+      return parser;
+    } on DioError catch (e) {
+      Map response = {
+        'code': e.response!.statusCode,
+        'message': e.response!.data['meta']['message'],
+      };
+      parser = ResponseParser.error(mapData: response);
+      return parser;
+    }
+  }
 }

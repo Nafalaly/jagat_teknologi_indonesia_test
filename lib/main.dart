@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:jagat_teknologi_indonesia_test/independent_controller/background_service/background_service_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/independent_controller/user_account/user_account_cubit.dart';
 import 'package:jagat_teknologi_indonesia_test/pages/screens.dart';
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
@@ -40,6 +41,11 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 ConnectivityCubit(internetAdaptor: connection)),
         BlocProvider(create: (context) => UserAccountCubit()),
+        BlocProvider(
+            create: (context) => BackgroundServiceBloc(
+                connectionCubit: context.read<ConnectivityCubit>(),
+                userCubit: context.read<UserAccountCubit>())
+              ..add(const BackgroundServiceInitiateServiceStart())),
       ],
       child: MaterialApp(
         initialRoute: '/SplashScreen',

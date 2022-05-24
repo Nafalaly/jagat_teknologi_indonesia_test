@@ -11,9 +11,11 @@ class Dashboard extends StatelessWidget {
         BlocProvider(create: (context) => OutletCubit()),
         BlocProvider(create: (context) => CardHandlerCubit()),
         BlocProvider(
-            create: (context) =>
-                DashboardBloc(outletCubit: context.read<OutletCubit>())
-                  ..add(DashboardInitialReload()))
+            create: (context) => DashboardBloc(
+                  connection: context.read<ConnectivityCubit>(),
+                  outletCubit: context.read<OutletCubit>(),
+                  backgroundService: context.read<BackgroundServiceBloc>(),
+                )..add(DashboardInitialReload())),
       ],
       child: BlocListener<DashboardBloc, DashboardState>(
         listener: (context, state) {
@@ -84,9 +86,39 @@ class Dashboard extends StatelessWidget {
                   children: [
                     bodyDisplay(),
                     appMenus(context),
+                    networkIndicator(),
                   ],
                 ))),
       ),
+    );
+  }
+
+  Widget networkIndicator() {
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      builder: (context, state) {
+        if (state is DashboardIdleState) {
+          if ((state).connectionState is NoInternetConnections) {
+            return Positioned(
+              bottom: 0,
+              child: Container(
+                  height: 30,
+                  width: DeviceScreen.devWidth,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(15),
+                          topLeft: Radius.circular(15))),
+                  child: Text('No Internet connection',
+                      style: blackFontStyle3.copyWith(color: Colors.white))),
+            );
+          } else {
+            return const SizedBox();
+          }
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 
@@ -102,24 +134,29 @@ class Dashboard extends StatelessWidget {
                 width: DeviceScreen.devWidth,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    for (int i = 0; i < (state).outlet!.outletSubs.length; i++)
-                      Container(
-                        padding: EdgeInsets.only(top: i == 0 ? 20 : 0),
-                        child: OutletCardWidget(
-                          endPos: 0,
-                          dashboard: context.read<DashboardBloc>(),
-                          startPos: (DeviceScreen.devWidth - (80 + 20)) * -1,
-                          outletSub: (state).outlet!.outletSubs[i],
-                          currencies: state.outlet!.currencies,
-                          cardCubit: context.read<CardHandlerCubit>(),
-                          index: i,
-                        ),
+                child: (state).outlet != null
+                    ? ListView(
+                        shrinkWrap: true,
+                        children: [
+                          for (int i = 0;
+                              i < (state).outlet!.outletSubs.length;
+                              i++)
+                            Container(
+                              padding: EdgeInsets.only(top: i == 0 ? 20 : 0),
+                              child: OutletCardWidget(
+                                endPos: 0,
+                                dashboard: context.read<DashboardBloc>(),
+                                startPos:
+                                    (DeviceScreen.devWidth - (80 + 20)) * -1,
+                                outletSub: (state).outlet!.outletSubs[i],
+                                currencies: state.outlet!.currencies,
+                                cardCubit: context.read<CardHandlerCubit>(),
+                                index: i,
+                              ),
+                            )
+                        ],
                       )
-                  ],
-                ),
+                    : const SizedBox(),
               );
             default:
               return const Center(
@@ -175,10 +212,10 @@ class Dashboard extends StatelessWidget {
                     padding:
                         const EdgeInsets.only(left: 15, right: 15, bottom: 5),
                     alignment: Alignment.topCenter,
-                    child: state.dataStatus is DataLoaded
-                        ? Image.asset('assets/btn_reload.png',
-                            fit: BoxFit.cover)
-                        : loadingIndicator,
+                    child: state.dataStatus is DataReloading
+                        ? loadingIndicator
+                        : Image.asset('assets/btn_reload.png',
+                            fit: BoxFit.cover),
                   ),
                 ),
               ),
