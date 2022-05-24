@@ -4,8 +4,7 @@ class APITransaction {
   APITransaction();
   Dio dio = Dio();
 
-  Future<ResponseParser> incomeService(
-      {required IncomePageIdleState state}) async {
+  Future<ResponseParser> uploadIncomeOutCome({required dynamic state}) async {
     ResponseParser parser = ResponseParser();
     try {
       Map data = {
@@ -33,11 +32,12 @@ class APITransaction {
     }
   }
 
-  Map _getIncomeData(IncomePageIdleState state) {
+  Map _getIncomeData(dynamic state) {
     Map data = {
-      'ptipe': 1,
+      'ptipe': (state is IncomePageIdleState) ? 1 : 2,
       'curr_id': int.parse(state.selectedCurrency!.id),
       'nominal': state.inputValue.toString(),
+      'outlet_id1': int.parse(state.selectedOutletSub!.id),
       'ket': state.desc,
     };
 

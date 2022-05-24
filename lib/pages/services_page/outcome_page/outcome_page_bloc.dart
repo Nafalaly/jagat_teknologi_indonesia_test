@@ -64,9 +64,21 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
     } else if (event is OutcomeStartDateChangeEvent) {
       emit((state as OutcomePageIdleState).copyWith(time: event.newDate));
     } else if (event is OutcomeSubmitAttemptEvent) {
-      String? errorMessage = (state as OutcomePageIdleState).validator();
-      if (errorMessage != null) {
-        add(OutcomeBadInput(message: errorMessage));
+      int? errorCodes = (state as OutcomePageIdleState).validator();
+      if (errorCodes != null) {
+        switch (errorCodes) {
+          case 501:
+            add(OutcomeBadInput(
+                message: 'Nominal tidak boleh 0', badInputCode: errorCodes));
+            break;
+          case 502:
+            add(OutcomeBadInput(
+                message: 'Upload Gambar minimal 1', badInputCode: errorCodes));
+            break;
+          default:
+            add(OutcomeBadInput(message: 'Bad Input State', badInputCode: 0));
+            break;
+        }
       } else {
         if ((state as OutcomePageIdleState).connectionStatus
             is InternetConnected) {
@@ -84,7 +96,8 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
           inputState: const OutcomeFormInteruptedByConnection()));
     } else if (event is OutcomeBadInput) {
       emit((state as OutcomePageIdleState).copyWith(
-          inputState: OutcomeFormBadInputState(message: event.message)));
+          inputState: OutcomeFormBadInputState(
+              message: event.message, badInputCode: event.badInputCode)));
     } else if (event is OutcomeDismissFormState ||
         event is OutcomeConnectionWarningDismiss) {
       emit((state as OutcomePageIdleState)
@@ -101,20 +114,14 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
   APITransaction apiTransaction = APITransaction();
 
   Future<void> uploadData() async {
-    // ResponseParser result = await apiTransaction.incomeService(
-    //     state: (state as OutcomePageIdleState));
-    // if (result.getStatus == ResponseStatus.success) {
-    //   add(OutcomeAttemptSuccess());
-    //   // add(LoginAttemptSucessfully());
-    // } else {
-    //   add(OutcomeAttemptFailed(message: 'Something went wrong'));
-    //   // if (result.getStatusCode == 1002) {
-    //   //   add(LoginFailed(message: 'Username atau password salah'));
-    //   // } else {
-    //   //   add(LoginFailed(message: 'Something went wrong'));
-    //   // }
-    // }
-    // return;
+    ResponseParser result = await apiTransaction.uploadIncomeOutCome(
+        state: (state as OutcomePageIdleState));
+    if (result.getStatus == ResponseStatus.success) {
+      add(OutcomeAttemptSuccess());
+    } else {
+      add(OutcomeAttemptFailed(message: 'Something went wrong'));
+    }
+    return;
   }
 
   Future<void> addPictures(File? file) async {

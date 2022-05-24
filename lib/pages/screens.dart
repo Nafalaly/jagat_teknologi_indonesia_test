@@ -21,6 +21,7 @@ import 'package:jagat_teknologi_indonesia_test/pages/splash_screen/splash_bloc.d
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 import 'package:jagat_teknologi_indonesia_test/shared/shared.dart';
 import 'package:jagat_teknologi_indonesia_test/shared/widgets/outlet_card_widget/cubit/card_handler_cubit.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 part 'login_page/login_view.dart';
 part 'dashboard_page/dashboard_view.dart';

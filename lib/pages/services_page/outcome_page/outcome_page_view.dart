@@ -13,6 +13,8 @@ class OutcomeServicePage extends StatelessWidget {
   final List<Currency> currencies;
   final List<OutletSub> availableOutletSub;
   Offset? fakeDropDownPosition;
+  final GlobalKey _valueTextField = GlobalKey(debugLabel: 'value key');
+  final GlobalKey _pictureKey = GlobalKey(debugLabel: 'picture key');
 
   double padding = 0;
   final TextEditingController valueController = TextEditingController();
@@ -48,15 +50,30 @@ class OutcomeServicePage extends StatelessWidget {
                       });
                 }
                 if (state.inputState is OutcomeFormBadInputState) {
-                  showWarning(
-                      message: (state.inputState as OutcomeFormBadInputState)
-                          .message,
-                      context: context,
-                      onFinish: () {
-                        context
-                            .read<OutcomePageBloc>()
-                            .add(OutcomeDismissFormState());
-                      });
+                  switch ((state.inputState as OutcomeFormBadInputState)
+                      .badInputCode) {
+                    case 501:
+                      badInputFocus(
+                          context: context,
+                          icon: FontAwesomeIcons.moneyBill1,
+                          widgetTarget: _valueTextField,
+                          message:
+                              (state.inputState as OutcomeFormBadInputState)
+                                  .message);
+                      break;
+                    case 502:
+                      badInputFocus(
+                          context: context,
+                          icon: Icons.photo,
+                          widgetTarget: _pictureKey,
+                          message:
+                              (state.inputState as OutcomeFormBadInputState)
+                                  .message);
+                      break;
+                  }
+                  context
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeDismissFormState());
                 }
                 if (state.inputState is OutcomeFormSuccess) {
                   await resultPopUp(context, true);
@@ -342,6 +359,7 @@ class OutcomeServicePage extends StatelessWidget {
                   Container(
                     width: DeviceScreen.devWidth - (100 + (10 * 2)),
                     height: 35,
+                    key: _valueTextField,
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -518,6 +536,7 @@ class OutcomeServicePage extends StatelessWidget {
                             ? GestureDetector(
                                 onTap: () => selectmethodtoupload(context),
                                 child: Container(
+                                  key: _pictureKey,
                                   height: allocatedHeightSize - 10,
                                   width: allocatedWidthSize - 270,
                                   decoration: BoxDecoration(

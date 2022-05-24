@@ -49,12 +49,12 @@ class IncomePageIdleState extends IncomePageState {
     return finalWidget;
   }
 
-  String? validator() {
+  int? validator() {
     if (inputValue == 0) {
-      return 'Input nilai belum terisi';
+      return 501;
     }
     if (pictures.isEmpty) {
-      return 'Silahkan upload gambar minimal 1';
+      return 502;
     }
     return null;
   }
@@ -167,7 +167,8 @@ class IncomeFormInteruptedByConnection extends IncomeInputState {
 
 class IncomeFormBadInputState extends IncomeInputState {
   final String message;
-  IncomeFormBadInputState({required this.message});
+  final int badInputCode;
+  IncomeFormBadInputState({required this.message, required this.badInputCode});
 }
 
 class IncomeFormInputIdle extends IncomeInputState {

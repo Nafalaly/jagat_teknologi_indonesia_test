@@ -75,5 +75,6 @@ class OutcomeDismissFormState extends OutcomePageEvent {}
 
 class OutcomeBadInput extends OutcomePageEvent {
   final String message;
-  OutcomeBadInput({required this.message});
+  final int badInputCode;
+  OutcomeBadInput({required this.message, required this.badInputCode});
 }

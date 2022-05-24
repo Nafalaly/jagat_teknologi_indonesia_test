@@ -13,6 +13,8 @@ class IncomeServicePage extends StatelessWidget {
   final List<Currency> currencies;
   final List<OutletSub> availableOutletSub;
   Offset? fakeDropDownPosition;
+  final GlobalKey _valueTextField = GlobalKey(debugLabel: 'value key');
+  final GlobalKey _pictureKey = GlobalKey(debugLabel: 'picture key');
 
   double padding = 0;
   final TextEditingController valueController = TextEditingController();
@@ -48,15 +50,26 @@ class IncomeServicePage extends StatelessWidget {
                       });
                 }
                 if (state.inputState is IncomeFormBadInputState) {
-                  showWarning(
-                      message:
-                          (state.inputState as IncomeFormBadInputState).message,
-                      context: context,
-                      onFinish: () {
-                        context
-                            .read<IncomePageBloc>()
-                            .add(IncomeDismissFormState());
-                      });
+                  switch ((state.inputState as IncomeFormBadInputState)
+                      .badInputCode) {
+                    case 501:
+                      badInputFocus(
+                          context: context,
+                          icon: FontAwesomeIcons.moneyBill1,
+                          widgetTarget: _valueTextField,
+                          message: (state.inputState as IncomeFormBadInputState)
+                              .message);
+                      break;
+                    case 502:
+                      badInputFocus(
+                          context: context,
+                          icon: Icons.photo,
+                          widgetTarget: _pictureKey,
+                          message: (state.inputState as IncomeFormBadInputState)
+                              .message);
+                      break;
+                  }
+                  context.read<IncomePageBloc>().add(IncomeDismissFormState());
                 }
                 if (state.inputState is IncomeFormSuccess) {
                   await resultPopUp(context, true);
@@ -335,6 +348,7 @@ class IncomeServicePage extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
+                    key: _valueTextField,
                     width: DeviceScreen.devWidth - (100 + (10 * 2)),
                     height: 35,
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -513,6 +527,7 @@ class IncomeServicePage extends StatelessWidget {
                             ? GestureDetector(
                                 onTap: () => selectmethodtoupload(context),
                                 child: Container(
+                                  key: _pictureKey,
                                   height: allocatedHeightSize - 10,
                                   width: allocatedWidthSize - 270,
                                   decoration: BoxDecoration(
@@ -632,4 +647,63 @@ Future<void> resultPopUp(BuildContext context, bool isSuccess) async {
         );
       });
   return;
+}
+
+void badInputFocus(
+    {required BuildContext context,
+    required GlobalKey widgetTarget,
+    required String message,
+    required IconData icon}) {
+  List<TargetFocus> targets = [
+    TargetFocus(
+        identify: "Target 1",
+        keyTarget: widgetTarget,
+        shape: ShapeLightFocus.RRect,
+        radius: 10,
+        contents: [
+          TargetContent(
+              align: ContentAlign.bottom,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(icon, color: Colors.white, size: 40),
+                      const SizedBox(width: defaultMargin),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Oops",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 20.0),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Text(
+                              message,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ))
+        ])
+  ];
+  TutorialCoachMark tutorial = TutorialCoachMark(context,
+      targets: targets, // List<TargetFocus>
+      hideSkip: true,
+      onFinish: () {},
+      onClickTargetWithTapPosition: (target, tapDetails) {},
+      onClickTarget: (target) {},
+      onSkip: () {});
+  tutorial.show();
 }

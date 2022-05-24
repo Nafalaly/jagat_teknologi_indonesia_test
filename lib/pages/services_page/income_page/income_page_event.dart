@@ -75,5 +75,6 @@ class IncomeDismissFormState extends IncomePageEvent {}
 
 class IncomeBadInput extends IncomePageEvent {
   final String message;
-  IncomeBadInput({required this.message});
+  final int badInputCode;
+  IncomeBadInput({required this.message, required this.badInputCode});
 }

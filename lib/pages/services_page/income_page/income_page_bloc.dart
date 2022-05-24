@@ -62,9 +62,21 @@ class IncomePageBloc extends Bloc<IncomePageEvent, IncomePageState> {
     } else if (event is IncomeStartDateChangeEvent) {
       emit((state as IncomePageIdleState).copyWith(time: event.newDate));
     } else if (event is IncomeSubmitAttemptEvent) {
-      String? errorMessage = (state as IncomePageIdleState).validator();
-      if (errorMessage != null) {
-        add(IncomeBadInput(message: errorMessage));
+      int? errorCodes = (state as IncomePageIdleState).validator();
+      if (errorCodes != null) {
+        switch (errorCodes) {
+          case 501:
+            add(IncomeBadInput(
+                message: 'Nominal tidak boleh 0', badInputCode: errorCodes));
+            break;
+          case 502:
+            add(IncomeBadInput(
+                message: 'Upload Gambar minimal 1', badInputCode: errorCodes));
+            break;
+          default:
+            add(IncomeBadInput(message: 'Bad Input State', badInputCode: 0));
+            break;
+        }
       } else {
         if ((state as IncomePageIdleState).connectionStatus
             is InternetConnected) {
@@ -82,7 +94,10 @@ class IncomePageBloc extends Bloc<IncomePageEvent, IncomePageState> {
           inputState: const IncomeFormInteruptedByConnection()));
     } else if (event is IncomeBadInput) {
       emit((state as IncomePageIdleState).copyWith(
-          inputState: IncomeFormBadInputState(message: event.message)));
+          inputState: IncomeFormBadInputState(
+        message: event.message,
+        badInputCode: event.badInputCode,
+      )));
     } else if (event is IncomeDismissFormState ||
         event is IncomeConnectionWarningDismiss) {
       emit((state as IncomePageIdleState)
@@ -99,18 +114,12 @@ class IncomePageBloc extends Bloc<IncomePageEvent, IncomePageState> {
   APITransaction apiTransaction = APITransaction();
 
   Future<void> uploadData() async {
-    ResponseParser result = await apiTransaction.incomeService(
+    ResponseParser result = await apiTransaction.uploadIncomeOutCome(
         state: (state as IncomePageIdleState));
     if (result.getStatus == ResponseStatus.success) {
       add(IncomeAttemptSuccess());
-      // add(LoginAttemptSucessfully());
     } else {
       add(IncomeAttemptFailed(message: 'Something went wrong'));
-      // if (result.getStatusCode == 1002) {
-      //   add(LoginFailed(message: 'Username atau password salah'));
-      // } else {
-      //   add(LoginFailed(message: 'Something went wrong'));
-      // }
     }
     return;
   }

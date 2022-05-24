@@ -49,12 +49,12 @@ class OutcomePageIdleState extends OutcomePageState {
     return finalWidget;
   }
 
-  String? validator() {
+  int? validator() {
     if (inputValue == 0) {
-      return 'Input nilai belum terisi';
+      return 501;
     }
     if (pictures.isEmpty) {
-      return 'Silahkan upload gambar minimal 1';
+      return 502;
     }
     return null;
   }
@@ -167,7 +167,8 @@ class OutcomeFormInteruptedByConnection extends OutcomeInputState {
 
 class OutcomeFormBadInputState extends OutcomeInputState {
   final String message;
-  OutcomeFormBadInputState({required this.message});
+  final int badInputCode;
+  OutcomeFormBadInputState({required this.message, required this.badInputCode});
 }
 
 class OutcomeFormInputIdle extends OutcomeInputState {
