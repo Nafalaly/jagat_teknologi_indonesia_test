@@ -65,7 +65,7 @@ class IncomeConnectionEstablished extends IncomePageEvent {}
 
 //Input behavior
 
-class IncomeDismissBadInput extends IncomePageEvent {}
+class IncomeDismissFormState extends IncomePageEvent {}
 
 class IncomeBadInput extends IncomePageEvent {
   final String message;

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable
+// ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable, use_build_context_synchronously
 
 part of '../../screens.dart';
 
@@ -34,7 +34,7 @@ class OutcomeServicePage extends StatelessWidget {
         builder: (context, state) {
           if (state is OutcomePageIdleState) {
             return BlocListener<OutcomePageBloc, OutcomePageState>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if ((state as OutcomePageIdleState).inputState
                     is OutcomeFormInteruptedByConnection) {
                   showWarning(
@@ -55,8 +55,15 @@ class OutcomeServicePage extends StatelessWidget {
                       onFinish: () {
                         context
                             .read<OutcomePageBloc>()
-                            .add(OutcomeDismissBadInput());
+                            .add(OutcomeDismissFormState());
                       });
+                }
+                if (state.inputState is IncomeFormSuccess) {
+                  await successPopUp(context);
+                  context
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeDismissFormState());
+                  Navigator.pop(context);
                 }
               },
               child: SafeArea(

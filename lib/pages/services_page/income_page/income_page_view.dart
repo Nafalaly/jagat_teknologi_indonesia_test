@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable
+// ignore_for_file: prefer_const_constructors_in_immutables, must_be_immutable, use_build_context_synchronously
 
 part of '../../screens.dart';
 
@@ -34,7 +34,7 @@ class IncomeServicePage extends StatelessWidget {
         builder: (context, state) {
           if (state is IncomePageIdleState) {
             return BlocListener<IncomePageBloc, IncomePageState>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if ((state as IncomePageIdleState).inputState
                     is IncomeFormInteruptedByConnection) {
                   showWarning(
@@ -55,8 +55,13 @@ class IncomeServicePage extends StatelessWidget {
                       onFinish: () {
                         context
                             .read<IncomePageBloc>()
-                            .add(IncomeDismissBadInput());
+                            .add(IncomeDismissFormState());
                       });
+                }
+                if (state.inputState is IncomeFormSuccess) {
+                  await successPopUp(context);
+                  context.read<IncomePageBloc>().add(IncomeDismissFormState());
+                  Navigator.pop(context);
                 }
               },
               child: SafeArea(
@@ -601,4 +606,25 @@ class IncomeServicePage extends StatelessWidget {
           );
         });
   }
+}
+
+Future<void> successPopUp(BuildContext context) async {
+  await showDialog(
+      context: context,
+      builder: (BuildContext _) {
+        return CupertinoAlertDialog(
+          title: Text('Info',
+              style: blackFontStyle2.copyWith(color: Colors.green)),
+          content: Text('Upload berhasil', style: blackFontStyle3),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: const Text('Ok'),
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      });
+  return;
 }

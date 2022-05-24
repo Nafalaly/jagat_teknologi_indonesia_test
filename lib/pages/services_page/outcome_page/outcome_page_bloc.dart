@@ -85,7 +85,7 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
     } else if (event is OutcomeBadInput) {
       emit((state as OutcomePageIdleState).copyWith(
           inputState: OutcomeFormBadInputState(message: event.message)));
-    } else if (event is OutcomeDismissBadInput ||
+    } else if (event is OutcomeDismissFormState ||
         event is OutcomeConnectionWarningDismiss) {
       emit((state as OutcomePageIdleState)
           .copyWith(inputState: const OutcomeFormInputIdle()));

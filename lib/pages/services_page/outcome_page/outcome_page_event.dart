@@ -65,7 +65,7 @@ class OutcomeConnectionEstablished extends OutcomePageEvent {}
 
 //Input behavior
 
-class OutcomeDismissBadInput extends OutcomePageEvent {}
+class OutcomeDismissFormState extends OutcomePageEvent {}
 
 class OutcomeBadInput extends OutcomePageEvent {
   final String message;

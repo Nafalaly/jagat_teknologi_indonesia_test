@@ -83,7 +83,7 @@ class IncomePageBloc extends Bloc<IncomePageEvent, IncomePageState> {
     } else if (event is IncomeBadInput) {
       emit((state as IncomePageIdleState).copyWith(
           inputState: IncomeFormBadInputState(message: event.message)));
-    } else if (event is IncomeDismissBadInput ||
+    } else if (event is IncomeDismissFormState ||
         event is IncomeConnectionWarningDismiss) {
       emit((state as IncomePageIdleState)
           .copyWith(inputState: const IncomeFormInputIdle()));
