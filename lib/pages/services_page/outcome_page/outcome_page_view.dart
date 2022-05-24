@@ -58,8 +58,14 @@ class OutcomeServicePage extends StatelessWidget {
                             .add(OutcomeDismissFormState());
                       });
                 }
-                if (state.inputState is IncomeFormSuccess) {
-                  await successPopUp(context);
+                if (state.inputState is OutcomeFormSuccess) {
+                  await resultPopUp(context, true);
+                  context
+                      .read<OutcomePageBloc>()
+                      .add(OutcomeDismissFormState());
+                  Navigator.pop(context);
+                } else if (state.inputState is OutcomeFormFailed) {
+                  await resultPopUp(context, false);
                   context
                       .read<OutcomePageBloc>()
                       .add(OutcomeDismissFormState());
@@ -347,9 +353,9 @@ class OutcomeServicePage extends StatelessWidget {
                       controller: valueController,
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.number,
-                      onChanged: (val) => context.read<OutcomePageBloc>().add(
-                          OutcomeInputValueChangeEvent(
-                              newValue: double.parse(val))),
+                      onChanged: (val) => context
+                          .read<OutcomePageBloc>()
+                          .add(OutcomeInputValueChangeEvent(newValue: val)),
                       style: blackFontStyle2.copyWith(
                           color: mainColor, fontWeight: FontWeight.bold),
                       textAlignVertical: TextAlignVertical.center,

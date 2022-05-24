@@ -29,8 +29,14 @@ class IncomeStartDateChangeEvent extends IncomePageEvent {
 }
 
 class IncomeInputValueChangeEvent extends IncomePageEvent {
-  final double newValue;
-  IncomeInputValueChangeEvent({required this.newValue});
+  late final double newValue;
+  IncomeInputValueChangeEvent({required String newValue}) {
+    try {
+      this.newValue = double.parse(newValue);
+    } on FormatException {
+      this.newValue = 0;
+    }
+  }
 }
 
 class IncomeAddPictureEvent extends IncomePageEvent {

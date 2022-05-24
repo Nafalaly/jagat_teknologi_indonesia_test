@@ -59,9 +59,12 @@ class IncomeServicePage extends StatelessWidget {
                       });
                 }
                 if (state.inputState is IncomeFormSuccess) {
-                  await successPopUp(context);
+                  await resultPopUp(context, true);
                   context.read<IncomePageBloc>().add(IncomeDismissFormState());
                   Navigator.pop(context);
+                } else if (state.inputState is IncomeFormFailed) {
+                  await resultPopUp(context, false);
+                  context.read<IncomePageBloc>().add(IncomeDismissFormState());
                 }
               },
               child: SafeArea(
@@ -345,9 +348,9 @@ class IncomeServicePage extends StatelessWidget {
                       controller: valueController,
                       textAlign: TextAlign.right,
                       keyboardType: TextInputType.number,
-                      onChanged: (val) => context.read<IncomePageBloc>().add(
-                          IncomeInputValueChangeEvent(
-                              newValue: double.parse(val))),
+                      onChanged: (val) => context
+                          .read<IncomePageBloc>()
+                          .add(IncomeInputValueChangeEvent(newValue: val)),
                       style: blackFontStyle2.copyWith(
                           color: mainColor, fontWeight: FontWeight.bold),
                       textAlignVertical: TextAlignVertical.center,
@@ -608,14 +611,16 @@ class IncomeServicePage extends StatelessWidget {
   }
 }
 
-Future<void> successPopUp(BuildContext context) async {
+Future<void> resultPopUp(BuildContext context, bool isSuccess) async {
   await showDialog(
       context: context,
       builder: (BuildContext _) {
         return CupertinoAlertDialog(
           title: Text('Info',
-              style: blackFontStyle2.copyWith(color: Colors.green)),
-          content: Text('Upload berhasil', style: blackFontStyle3),
+              style: blackFontStyle2.copyWith(
+                  color: isSuccess ? Colors.green : Colors.red)),
+          content: Text(isSuccess ? 'Transaksi berhasil' : 'Transaksi Gagal',
+              style: blackFontStyle3),
           actions: <Widget>[
             CupertinoDialogAction(
               child: const Text('Ok'),

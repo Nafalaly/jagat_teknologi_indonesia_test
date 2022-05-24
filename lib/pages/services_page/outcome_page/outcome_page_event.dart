@@ -29,8 +29,14 @@ class OutcomeStartDateChangeEvent extends OutcomePageEvent {
 }
 
 class OutcomeInputValueChangeEvent extends OutcomePageEvent {
-  final double newValue;
-  OutcomeInputValueChangeEvent({required this.newValue});
+  late final double newValue;
+  OutcomeInputValueChangeEvent({required String newValue}) {
+    try {
+      this.newValue = double.parse(newValue);
+    } on FormatException {
+      this.newValue = 0;
+    }
+  }
 }
 
 class OutcomeAddPictureEvent extends OutcomePageEvent {
