@@ -114,8 +114,8 @@ class IncomePageBloc extends Bloc<IncomePageEvent, IncomePageState> {
   APITransaction apiTransaction = APITransaction();
 
   Future<void> uploadData() async {
-    ResponseParser result = await apiTransaction.uploadIncomeOutCome(
-        state: (state as IncomePageIdleState));
+    ResponseParser result =
+        await apiTransaction.upload(state: (state as IncomePageIdleState));
     if (result.getStatus == ResponseStatus.success) {
       add(IncomeAttemptSuccess());
     } else {

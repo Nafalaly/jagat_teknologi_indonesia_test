@@ -12,17 +12,17 @@ import 'package:jagat_teknologi_indonesia_test/models/models.dart';
 import 'package:jagat_teknologi_indonesia_test/pages/services_page/income_page/income_page_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 
-part 'outcome_page_event.dart';
-part 'outcome_page_state.dart';
+part 'pindah_page_event.dart';
+part 'pindah_page_state.dart';
 
-class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
-  OutcomePageBloc(
+class PindahPageBloc extends Bloc<PindahPageEvent, PindahPageState> {
+  PindahPageBloc(
       {required List<Currency> availableCurrencies,
       required List<OutletSub> availableOutletSub,
       required OutletSub currentOutletSub,
       required UserData current,
       required this.connection})
-      : super(OutcomePageIdleState.setInitialData(
+      : super(PindahPageIdleState.setInitialData(
             availableCurrencies: availableCurrencies,
             currentUser: current,
             availableOutletSub: availableOutletSub,
@@ -30,9 +30,9 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
             connection: connection.state)) {
     connectionMonitor = connection.stream.listen((event) {
       if (event is InternetConnected) {
-        add(OutcomeConnectionEstablished());
+        add(PindahConnectionEstablished());
       } else {
-        add(OutcomeInteruptedByConnection());
+        add(PindahInteruptedByConnection());
       }
     });
     on(mapEvent);
@@ -41,74 +41,85 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
   late StreamSubscription connectionMonitor;
 
   Future<void> mapEvent(
-      OutcomePageEvent event, Emitter<OutcomePageState> emit) async {
-    if (event is OutcomeSubOutletChangeEvent) {
+      PindahPageEvent event, Emitter<PindahPageState> emit) async {
+    if (event is PindahSubOutletChangeEvent) {
+      emit((state as PindahPageIdleState).copyWith(outletSub: event.newOutlet));
+    } else if (event is PindahToSubOutletChangeEvent) {
+      emit((state as PindahPageIdleState)
+          .copyWith(toOutletSub: event.newOutlet));
+    } else if (event is PindahCurrencyChangeEvent) {
       emit(
-          (state as OutcomePageIdleState).copyWith(outletSub: event.newOutlet));
-    } else if (event is OutcomeCurrencyChangeEvent) {
-      emit((state as OutcomePageIdleState)
-          .copyWith(currency: event.newCurrency));
-    } else if (event is OutcomeInputValueChangeEvent) {
-      emit(
-          (state as OutcomePageIdleState).copyWith(inputValue: event.newValue));
-    } else if (event is OutcomeAddPicture) {
+          (state as PindahPageIdleState).copyWith(currency: event.newCurrency));
+    } else if (event is PindahInputValueChangeEvent) {
+      emit((state as PindahPageIdleState).copyWith(inputValue: event.newValue));
+    } else if (event is PindahAddPicture) {
       addPictures(await getimage(event.source));
-    } else if (event is OutcomeAddPictureEvent) {
-      emit((state as OutcomePageIdleState).copyWith(
-          pictures: (state as OutcomePageIdleState).pictures..add(event.file)));
-    } else if (event is OutcomeRemovePictureEvent) {
-      emit((state as OutcomePageIdleState).copyWith(
-          pictures: (state as OutcomePageIdleState).pictures
+    } else if (event is PindahAddPictureEvent) {
+      emit((state as PindahPageIdleState).copyWith(
+          pictures: (state as PindahPageIdleState).pictures..add(event.file)));
+    } else if (event is PindahRemovePictureEvent) {
+      emit((state as PindahPageIdleState).copyWith(
+          pictures: (state as PindahPageIdleState).pictures
             ..removeAt(event.indexPicture)));
-    } else if (event is OutcomeDescriptionChangeEvent) {
-      emit((state as OutcomePageIdleState).copyWith(desc: event.newDesc));
-    } else if (event is OutcomeStartDateChangeEvent) {
-      emit((state as OutcomePageIdleState).copyWith(time: event.newDate));
-    } else if (event is OutcomeSubmitAttemptEvent) {
-      int? errorCodes = (state as OutcomePageIdleState).validator();
+    } else if (event is PindahDescriptionChangeEvent) {
+      emit((state as PindahPageIdleState).copyWith(desc: event.newDesc));
+    } else if (event is PindahStartDateChangeEvent) {
+      emit((state as PindahPageIdleState).copyWith(time: event.newDate));
+    } else if (event is PindahSubmitAttemptEvent) {
+      int? errorCodes = (state as PindahPageIdleState).validator();
       if (errorCodes != null) {
         switch (errorCodes) {
-          case 501:
-            add(OutcomeBadInput(
+          case 503:
+            add(PindahBadInput(
                 message: 'Nominal tidak boleh 0', badInputCode: errorCodes));
             break;
-          case 502:
-            add(OutcomeBadInput(
+          case 504:
+            add(PindahBadInput(
                 message: 'Upload Gambar minimal 1', badInputCode: errorCodes));
             break;
+          case 501:
+            add(PindahBadInput(
+                message: 'Outlet tujuan tidak boleh kosong',
+                badInputCode: errorCodes));
+            break;
+          case 502:
+            add(PindahBadInput(
+                message: 'Outlet asal dengan tujuan haruslah berbeda',
+                badInputCode: errorCodes));
+            break;
           default:
-            add(OutcomeBadInput(message: 'Bad Input State', badInputCode: 0));
+            add(PindahBadInput(message: 'Bad Input State', badInputCode: 0));
             break;
         }
       } else {
-        if ((state as OutcomePageIdleState).connectionStatus
+        if ((state as PindahPageIdleState).connectionStatus
             is InternetConnected) {
           uploadData();
         } else {
-          add(OutcomeInteruptedByConnection());
+          add(PindahInteruptedByConnection());
         }
       }
-    } else if (event is OutcomeConnectionEstablished) {
-      emit((state as OutcomePageIdleState)
+    } else if (event is PindahConnectionEstablished) {
+      emit((state as PindahPageIdleState)
           .copyWith(connectionStatus: const InternetConnected()));
-    } else if (event is OutcomeInteruptedByConnection) {
-      emit((state as OutcomePageIdleState).copyWith(
+    } else if (event is PindahInteruptedByConnection) {
+      emit((state as PindahPageIdleState).copyWith(
           connectionStatus: const NoInternetConnections(),
-          inputState: const OutcomeFormInteruptedByConnection()));
-    } else if (event is OutcomeBadInput) {
-      emit((state as OutcomePageIdleState).copyWith(
-          inputState: OutcomeFormBadInputState(
+          inputState: const PindahFormInteruptedByConnection()));
+    } else if (event is PindahBadInput) {
+      emit((state as PindahPageIdleState).copyWith(
+          inputState: PindahFormBadInputState(
               message: event.message, badInputCode: event.badInputCode)));
-    } else if (event is OutcomeDismissFormState ||
-        event is OutcomeConnectionWarningDismiss) {
-      emit((state as OutcomePageIdleState)
-          .copyWith(inputState: const OutcomeFormInputIdle()));
-    } else if (event is OutcomeAttemptSuccess) {
-      emit((state as OutcomePageIdleState)
-          .copyWith(inputState: OutcomeFormSuccess()));
-    } else if (event is OutcomeAttemptFailed) {
-      emit((state as OutcomePageIdleState)
-          .copyWith(inputState: OutcomeFormFailed(message: event.message)));
+    } else if (event is PindahDismissFormState ||
+        event is PindahConnectionWarningDismiss) {
+      emit((state as PindahPageIdleState)
+          .copyWith(inputState: const PindahFormInputIdle()));
+    } else if (event is PindahAttemptSuccess) {
+      emit((state as PindahPageIdleState)
+          .copyWith(inputState: PindahFormSuccess()));
+    } else if (event is PindahAttemptFailed) {
+      emit((state as PindahPageIdleState)
+          .copyWith(inputState: PindahFormFailed(message: event.message)));
     }
   }
 
@@ -116,11 +127,11 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
 
   Future<void> uploadData() async {
     ResponseParser result =
-        await apiTransaction.upload(state: (state as OutcomePageIdleState));
+        await apiTransaction.upload(state: (state as PindahPageIdleState));
     if (result.getStatus == ResponseStatus.success) {
-      add(OutcomeAttemptSuccess());
+      add(PindahAttemptSuccess());
     } else {
-      add(OutcomeAttemptFailed(message: 'Something went wrong'));
+      add(PindahAttemptFailed(message: 'Something went wrong'));
     }
     return;
   }
@@ -129,7 +140,7 @@ class OutcomePageBloc extends Bloc<OutcomePageEvent, OutcomePageState> {
     if (file == null) {
       return;
     } else {
-      add(OutcomeAddPictureEvent(file: file));
+      add(PindahAddPictureEvent(file: file));
     }
   }
 

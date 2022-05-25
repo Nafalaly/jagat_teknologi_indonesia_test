@@ -1,30 +1,32 @@
 // ignore_for_file: must_be_immutable
 
-part of 'outcome_page_bloc.dart';
+part of 'pindah_page_bloc.dart';
 
 @immutable
-abstract class OutcomePageState {
+abstract class PindahPageState {
   late List<Currency> availableCurrencies = [];
   late List<OutletSub> availableOutletSub = [];
+  late List<OutletSub> availableToOutletSub = [];
   late UserData currentUser = UserData();
   late ConnectivityState connectionStatus = const InternetInitial();
   late Currency? selectedCurrency;
-  late OutletSub? selectedOutletSub;
+  late OutletSub? selectedOutletSub = OutletSub.dummy();
+  late OutletSub? selectedToOutletSub = OutletSub.dummy();
   DateTime startDate = DateTime.now();
   late List<File> pictures = [];
   late double inputValue = 0;
   late String desc = '';
-  late OutcomeInputState inputState = const OutcomeFormInputIdle();
+  late PindahInputState inputState = const PindahFormInputIdle();
 }
 
-class OutcomePageInitial extends OutcomePageState {}
+class PindahPageInitial extends PindahPageState {}
 
-class OutcomePageErrorState extends OutcomePageState {
+class PindahPageErrorState extends PindahPageState {
   final String errorMessage;
-  OutcomePageErrorState({required this.errorMessage});
+  PindahPageErrorState({required this.errorMessage});
 }
 
-class OutcomePageIdleState extends OutcomePageState {
+class PindahPageIdleState extends PindahPageState {
   List<PictureWidget> getPicturesWidget() {
     List<PictureWidget> finalWidget =
         List.generate(4, (index) => PictureWidget());
@@ -43,16 +45,24 @@ class OutcomePageIdleState extends OutcomePageState {
   }
 
   int? validator() {
-    if (inputValue == 0) {
+    if (super.selectedToOutletSub!.id == null) {
+      //Outlet tujuan kosong
       return 501;
     }
-    if (pictures.isEmpty) {
+    if (super.selectedToOutletSub!.id == super.selectedOutletSub!.id) {
+      //Outlet tujuan dan asal sama
       return 502;
+    }
+    if (inputValue == 0) {
+      return 503;
+    }
+    if (pictures.isEmpty) {
+      return 504;
     }
     return null;
   }
 
-  OutcomePageIdleState.setInitialData({
+  PindahPageIdleState.setInitialData({
     required List<Currency> availableCurrencies,
     required List<OutletSub> availableOutletSub,
     required OutletSub currentOutletSub,
@@ -63,27 +73,36 @@ class OutcomePageIdleState extends OutcomePageState {
     super.currentUser = currentUser;
     super.availableCurrencies = availableCurrencies;
     super.availableOutletSub = availableOutletSub;
-    selectedCurrency = super.availableCurrencies[0];
+    selectedToOutletSub = OutletSub.dummy();
+    super.availableToOutletSub = List.from(availableOutletSub);
+    super.availableToOutletSub.add(selectedToOutletSub!);
     selectedOutletSub = currentOutletSub;
+    selectedCurrency = super.availableCurrencies[0];
     startDate = DateTime.now();
   }
 
-  OutcomePageIdleState({
+  PindahPageIdleState({
     DateTime? time,
     Currency? currency,
     OutletSub? outletSub,
+    OutletSub? toOutletSub,
     List<File>? pictures,
     List<Currency>? availableCurrencies,
     List<OutletSub>? availableOutletSub,
+    List<OutletSub>? availableToOutletSub,
     UserData? userData,
     double inputValue = 0,
     String desc = '',
     ConnectivityState? connectionStatus,
-    OutcomeInputState inputState = const OutcomeFormInputIdle(),
+    PindahInputState inputState = const PindahFormInputIdle(),
   }) {
     super.inputState = inputState;
     super.inputValue = inputValue;
     super.desc = desc;
+    if (availableToOutletSub != null) {
+      super.availableToOutletSub = availableToOutletSub;
+    }
+
     if (connectionStatus != null) {
       super.connectionStatus = connectionStatus;
     }
@@ -106,13 +125,16 @@ class OutcomePageIdleState extends OutcomePageState {
     if (outletSub != null) {
       selectedOutletSub = outletSub;
     }
+    if (toOutletSub != null) {
+      super.selectedToOutletSub = toOutletSub;
+    }
 
     if (pictures != null) {
       this.pictures = pictures;
     }
   }
 
-  OutcomePageIdleState copyWith({
+  PindahPageIdleState copyWith({
     DateTime? time,
     Currency? currency,
     List<File>? pictures,
@@ -120,19 +142,23 @@ class OutcomePageIdleState extends OutcomePageState {
     String? desc,
     List<Currency>? availableCurrencies,
     List<OutletSub>? availableOutletSub,
+    List<OutletSub>? availableToOutletSub,
     UserData? userData,
     OutletSub? outletSub,
+    OutletSub? toOutletSub,
     ConnectivityState? connectionStatus,
-    OutcomeInputState? inputState,
+    PindahInputState? inputState,
   }) {
-    return OutcomePageIdleState(
+    return PindahPageIdleState(
       userData: userData ?? currentUser,
       time: time ?? startDate,
       desc: desc ?? this.desc,
       currency: currency ?? selectedCurrency,
       pictures: pictures ?? this.pictures,
+      toOutletSub: toOutletSub ?? selectedToOutletSub,
       availableCurrencies: availableCurrencies ?? this.availableCurrencies,
       availableOutletSub: availableOutletSub ?? this.availableOutletSub,
+      availableToOutletSub: availableToOutletSub ?? this.availableToOutletSub,
       connectionStatus: connectionStatus ?? this.connectionStatus,
       outletSub: outletSub ?? selectedOutletSub,
       inputState: inputState ?? this.inputState,
@@ -141,29 +167,29 @@ class OutcomePageIdleState extends OutcomePageState {
   }
 }
 
-abstract class OutcomeInputState {
-  const OutcomeInputState();
+abstract class PindahInputState {
+  const PindahInputState();
 }
 
-class OutcomeFormSubmitting extends OutcomeInputState {}
+class PindahFormSubmitting extends PindahInputState {}
 
-class OutcomeFormSuccess extends OutcomeInputState {}
+class PindahFormSuccess extends PindahInputState {}
 
-class OutcomeFormFailed extends OutcomeInputState {
+class PindahFormFailed extends PindahInputState {
   final String message;
-  OutcomeFormFailed({required this.message});
+  PindahFormFailed({required this.message});
 }
 
-class OutcomeFormInteruptedByConnection extends OutcomeInputState {
-  const OutcomeFormInteruptedByConnection();
+class PindahFormInteruptedByConnection extends PindahInputState {
+  const PindahFormInteruptedByConnection();
 }
 
-class OutcomeFormBadInputState extends OutcomeInputState {
+class PindahFormBadInputState extends PindahInputState {
   final String message;
   final int badInputCode;
-  OutcomeFormBadInputState({required this.message, required this.badInputCode});
+  PindahFormBadInputState({required this.message, required this.badInputCode});
 }
 
-class OutcomeFormInputIdle extends OutcomeInputState {
-  const OutcomeFormInputIdle();
+class PindahFormInputIdle extends PindahInputState {
+  const PindahFormInputIdle();
 }

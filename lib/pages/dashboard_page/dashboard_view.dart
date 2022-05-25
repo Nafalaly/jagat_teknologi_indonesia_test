@@ -58,6 +58,25 @@ class Dashboard extends StatelessWidget {
               context
                   .read<DashboardBloc>()
                   .add(DashboardNavigatingToOtherPage());
+            } else if (state.navigator is DashboardToPindah) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext _) {
+                return PindahServicePage(
+                  currentOutletSub:
+                      (state.navigator as DashboardToPindah).currentOutletSub,
+                  availableOutletSub:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .outletSubs,
+                  currencies:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .currencies,
+                );
+              }));
+              context
+                  .read<DashboardBloc>()
+                  .add(DashboardNavigatingToOtherPage());
             }
           }
         },

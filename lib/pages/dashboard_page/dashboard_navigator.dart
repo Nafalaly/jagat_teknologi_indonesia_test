@@ -17,3 +17,8 @@ class DashboardToKeluar extends DashboardNavigator {
   final OutletSub currentOutletSub;
   DashboardToKeluar({required this.currentOutletSub});
 }
+
+class DashboardToPindah extends DashboardNavigator {
+  final OutletSub currentOutletSub;
+  DashboardToPindah({required this.currentOutletSub});
+}

@@ -4,7 +4,7 @@ class APITransaction {
   APITransaction();
   Dio dio = Dio();
 
-  Future<ResponseParser> uploadIncomeOutCome({required dynamic state}) async {
+  Future<ResponseParser> upload({required dynamic state}) async {
     ResponseParser parser = ResponseParser();
     try {
       Map data = {
@@ -34,12 +34,18 @@ class APITransaction {
 
   Map _getIncomeData(dynamic state) {
     Map data = {
-      'ptipe': (state is IncomePageIdleState) ? 1 : 2,
+      'ptipe': _getPtipeCode(state),
       'curr_id': int.parse(state.selectedCurrency!.id),
       'nominal': state.inputValue.toString(),
       'outlet_id1': int.parse(state.selectedOutletSub!.id),
       'ket': state.desc,
+      "tgl":
+          '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}',
     };
+
+    if (state is PindahPageIdleState) {
+      data['outlet_id2'] = int.parse(state.selectedToOutletSub!.id!);
+    }
 
     for (int i = 0; i < state.pictures.length; i++) {
       var key = 'photo';
@@ -51,5 +57,18 @@ class APITransaction {
       data[key] = base64Image;
     }
     return data;
+  }
+
+  int _getPtipeCode(dynamic state) {
+    if (state is IncomePageIdleState) {
+      return 1;
+    }
+    if (state is OutcomePageIdleState) {
+      return 2;
+    }
+    if (state is PindahPageIdleState) {
+      return 3;
+    }
+    return 0;
   }
 }

@@ -64,7 +64,11 @@ class Outlet {
 
 class OutletSub {
   OutletSub();
-  late String id;
+  OutletSub.dummy() {
+    id = null;
+    outletName = 'Pilih Outlet';
+  }
+  late String? id;
   late String outletName;
   late String parentId;
   late String orderId;

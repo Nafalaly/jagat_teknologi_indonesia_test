@@ -17,6 +17,7 @@ import 'package:jagat_teknologi_indonesia_test/pages/dashboard_page/dashboard_bl
 import 'package:jagat_teknologi_indonesia_test/pages/login_page/login_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/pages/services_page/income_page/income_page_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/pages/services_page/outcome_page/outcome_page_bloc.dart';
+import 'package:jagat_teknologi_indonesia_test/pages/services_page/pindah_page/pindah_page_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/pages/splash_screen/splash_bloc.dart';
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 import 'package:jagat_teknologi_indonesia_test/shared/shared.dart';
@@ -30,3 +31,4 @@ part 'dashboard_page/dashboard_view.dart';
 part 'splash_screen/splash_view.dart';
 part 'services_page/income_page/income_page_view.dart';
 part 'services_page/outcome_page/outcome_page_view.dart';
+part 'services_page/pindah_page/pindah_page_view.dart';

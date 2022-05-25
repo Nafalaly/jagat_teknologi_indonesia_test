@@ -149,7 +149,12 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
                 DashboardNavigateToKeluar(currentOutletSub: widget.outletSub));
           }),
       _ButtonService(
-          title: 'Pindah', assetPath: 'assets/btn_move.png', onTap: () {}),
+          title: 'Pindah',
+          assetPath: 'assets/btn_move.png',
+          onTap: () {
+            widget.dashboard.add(
+                DashboardNavigateToPindah(currentOutletSub: widget.outletSub));
+          }),
       _ButtonService(
           title: 'Mutasi', assetPath: 'assets/btn_history.png', onTap: () {}),
       _ButtonService(
@@ -334,11 +339,13 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
               child: ClipPath(
                 clipper: MyCustomClipper(),
                 child: GestureDetector(
-                  //TODO ON BACK BUTTON
-                  // onTap: () => context.read<OutletCardWidgetBloc>().add(
-                  //     OpenPanel(
-                  //         toogle: !(state as OutletCardWidgetIdleState)
-                  //             .detailOpen)),
+                  onTap: () {
+                    if ((context.read<OutletCardWidgetBloc>().state
+                            as OutletCardWidgetIdleState)
+                        .panelStateOpen) {
+                      context.read<OutletCardWidgetBloc>().add(ClosePanel());
+                    }
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: secondColor,
@@ -430,7 +437,7 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
                 height: 30,
                 color: Colors.white,
                 alignment: Alignment.centerRight,
-                child: Text('1200',
+                child: Text(_getDummyValueForCurrencies(symbol),
                     style: blackFontStyle2.copyWith(
                         color: mainColor, fontWeight: FontWeight.w600)),
               )
@@ -439,6 +446,21 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
         ],
       ),
     );
+  }
+}
+
+String _getDummyValueForCurrencies(String symbol) {
+  switch (symbol) {
+    case 'IDR':
+      return '500.000';
+    case 'USD':
+      return '0';
+    case 'EUR':
+      return '20.000';
+    case 'SGD':
+      return '6.000';
+    default:
+      return 'This is only dummy value';
   }
 }
 

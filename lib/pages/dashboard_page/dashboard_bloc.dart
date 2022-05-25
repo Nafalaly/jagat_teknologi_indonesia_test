@@ -75,6 +75,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } else if (event is DashboardReloadFailed) {
       emit((state as DashboardIdleState)
           .copyWith(dataStatus: const DataInteruptedByNetworkProblem()));
+    } else if (event is DashboardNavigateToPindah) {
+      emit((state as DashboardIdleState).copyWith(
+          navigator:
+              DashboardToPindah(currentOutletSub: event.currentOutletSub)));
     }
   }
 

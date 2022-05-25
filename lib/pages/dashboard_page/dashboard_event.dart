@@ -36,6 +36,11 @@ class DashboardNavigateToKeluar extends DashboardEvent {
   const DashboardNavigateToKeluar({required this.currentOutletSub});
 }
 
+class DashboardNavigateToPindah extends DashboardEvent {
+  final OutletSub currentOutletSub;
+  const DashboardNavigateToPindah({required this.currentOutletSub});
+}
+
 class DashboardSwitchToMenu extends DashboardEvent {
   final int switchToIndex;
   const DashboardSwitchToMenu({required this.switchToIndex});
