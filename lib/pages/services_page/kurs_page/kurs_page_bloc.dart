@@ -6,8 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:jagat_teknologi_indonesia_test/independent_controller/connectivity_controller/connectivity_state.dart';
 import 'package:jagat_teknologi_indonesia_test/models/models.dart';
-import 'package:money_converter/Currency.dart' as money;
-import 'package:money_converter/money_converter.dart' as money;
+import 'package:jagat_teknologi_indonesia_test/services/services.dart';
 
 part 'kurs_page_event.dart';
 part 'kurs_page_state.dart';
@@ -113,11 +112,13 @@ class KursPageBloc extends Bloc<KursPageEvent, KursPageState> {
     }
   }
 
+  APICurrency api = APICurrency();
+
   Future<void> calculateKurs() async {
-    var usdConvert = await money.MoneyConverter.convert(
-        money.Currency(state.selectedCurrency!.currencyName,
-            amount: state.inputValue),
-        money.Currency(state.selectedToCurrency!.currencyName));
+    var usdConvert = await api.convert(
+        ammount: state.inputValue.toString(),
+        from: state.selectedCurrency!.currencyName,
+        to: state.selectedToCurrency!.currencyName);
     add(KursOutputValueChangeEvent(newValue: usdConvert.toString()));
     return;
   }

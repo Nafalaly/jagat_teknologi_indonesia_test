@@ -13,3 +13,4 @@ part 'api/baseUrl.dart';
 part 'api/response_formatter.dart';
 part 'api/outlet.dart';
 part 'api/transaction.dart';
+part 'api/currency.dart';

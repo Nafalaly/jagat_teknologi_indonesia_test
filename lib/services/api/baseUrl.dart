@@ -14,4 +14,6 @@ class BaseUrl {
 
   static const String backroundHit =
       'http://test-tech.api.jtisrv.com/md/public/API/BgService/Hit';
+
+  static String currencyConverter = 'https://api.apilayer.com/fixer/convert';
 }
