@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="/home/nafalaly/Documents/project/flutter/projects/jagat_teknologi_indonesia_test/android/app"
+    name=":app"
+    type="APP"
+    maven="android:app:"
+    gradle="7.1.2"
+    buildFolder="/home/nafalaly/Documents/project/flutter/projects/jagat_teknologi_indonesia_test/build/app"
+    bootClassPath="/home/nafalaly/Android/Sdk/platforms/android-31/android.jar:/home/nafalaly/Android/Sdk/build-tools/30.0.3/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-31">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>
