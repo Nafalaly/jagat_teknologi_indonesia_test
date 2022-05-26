@@ -132,8 +132,8 @@ class Dashboard extends StatelessWidget {
                   ),
                   actions: [
                     SizedBox(
-                      height: 30,
-                      width: 60,
+                      height: 40,
+                      width: 40,
                       child: Image.asset('assets/btn_notification.png'),
                     )
                   ],

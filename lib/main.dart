@@ -43,9 +43,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => UserAccountCubit()),
         BlocProvider(
             create: (context) => BackgroundServiceBloc(
-                connectionCubit: context.read<ConnectivityCubit>(),
-                userCubit: context.read<UserAccountCubit>())
-              ..add(const BackgroundServiceInitiateServiceStart())),
+                  connectionCubit: context.read<ConnectivityCubit>(),
+                )..add(const BackgroundServiceInitiateServiceStart())),
       ],
       child: MaterialApp(
         initialRoute: '/SplashScreen',

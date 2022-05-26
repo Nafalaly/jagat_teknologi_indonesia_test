@@ -3,18 +3,16 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jagat_teknologi_indonesia_test/independent_controller/connectivity_controller/connectivity_state.dart';
-import 'package:jagat_teknologi_indonesia_test/independent_controller/user_account/user_account_cubit.dart';
 import 'package:jagat_teknologi_indonesia_test/services/services.dart';
-import 'package:meta/meta.dart';
 
 part 'background_service_event.dart';
 part 'background_service_state.dart';
 
 class BackgroundServiceBloc
     extends Bloc<BackgroundServiceEvent, BackgroundServiceState> {
-  BackgroundServiceBloc(
-      {required this.userCubit, required this.connectionCubit})
+  BackgroundServiceBloc({required this.connectionCubit})
       : super(BackgroundServiceInitial()) {
     on(mapEvent);
     connectionMonitor = connectionCubit.stream.listen((event) {
@@ -24,18 +22,10 @@ class BackgroundServiceBloc
         add(const BackgroundServiceConnectionInterruptsProcess());
       }
     });
-    userMonitor = userCubit.stream.listen((userState) {
-      if (userState is UserAccountAttached) {
-        add(const BackgroundServiceUserLoggedIn());
-      } else {
-        add(const BackgroundServiceUserLoggedOut());
-      }
-    });
   }
 
-  final UserAccountCubit userCubit;
   final ConnectivityCubit connectionCubit;
-  late StreamSubscription userMonitor;
+
   late StreamSubscription connectionMonitor;
   final APIUserService apiUser = APIUserService();
 
@@ -65,8 +55,7 @@ class BackgroundServiceBloc
     if (state is BackgroundServiceRunningState) {
       return;
     }
-    if (userCubit.state is UserAccountAttached &&
-        connectionCubit.state is InternetConnected) {
+    if (connectionCubit.state is InternetConnected) {
       add(const BackgroundServiceStatusChange(isReady: true));
     } else {
       add(const BackgroundServiceStatusChange(isReady: false));
@@ -77,12 +66,16 @@ class BackgroundServiceBloc
     if (state is BackgroundServiceRunningState) {
     } else {
       emit(BackgroundServiceRunningState());
-      print('Background waiting..');
+      if (kDebugMode) {
+        print('Background waiting..');
+      }
       await Future.delayed(const Duration(seconds: 30));
       if ((connectionCubit.state is NoInternetConnections)) {
       } else {
         await apiUser.backgroundHit();
-        print('Background Sent at${DateTime.now()}');
+        if (kDebugMode) {
+          print('Background Sent at${DateTime.now()}');
+        }
       }
       emit(BackgroundServiceIdleState());
       initializeService();
@@ -91,7 +84,6 @@ class BackgroundServiceBloc
 
   @override
   Future<void> close() {
-    userMonitor.cancel();
     connectionMonitor.cancel();
     return super.close();
   }
