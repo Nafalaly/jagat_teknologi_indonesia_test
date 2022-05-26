@@ -77,6 +77,44 @@ class Dashboard extends StatelessWidget {
               context
                   .read<DashboardBloc>()
                   .add(DashboardNavigatingToOtherPage());
+            } else if (state.navigator is DashboardToMutasi) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext _) {
+                return MutasiServicePage(
+                  curentOutlet:
+                      (state.navigator as DashboardToMutasi).currentOutletSub,
+                  availableOutletSub:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .outletSubs,
+                  currencies:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .currencies,
+                );
+              }));
+              context
+                  .read<DashboardBloc>()
+                  .add(DashboardNavigatingToOtherPage());
+            } else if (state.navigator is DashboardToKurs) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (BuildContext _) {
+                return KursServicePage(
+                  curentOutlet:
+                      (state.navigator as DashboardToKurs).currentOutletSub,
+                  availableOutletSub:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .outletSubs,
+                  currencies:
+                      (context.read<OutletCubit>().state as OutletIdleState)
+                          .outlet
+                          .currencies,
+                );
+              }));
+              context
+                  .read<DashboardBloc>()
+                  .add(DashboardNavigatingToOtherPage());
             }
           }
         },

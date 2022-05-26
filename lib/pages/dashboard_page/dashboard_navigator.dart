@@ -22,3 +22,13 @@ class DashboardToPindah extends DashboardNavigator {
   final OutletSub currentOutletSub;
   DashboardToPindah({required this.currentOutletSub});
 }
+
+class DashboardToKurs extends DashboardNavigator {
+  final OutletSub currentOutletSub;
+  DashboardToKurs({required this.currentOutletSub});
+}
+
+class DashboardToMutasi extends DashboardNavigator {
+  final OutletSub currentOutletSub;
+  DashboardToMutasi({required this.currentOutletSub});
+}

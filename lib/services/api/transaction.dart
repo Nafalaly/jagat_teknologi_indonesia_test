@@ -32,6 +32,43 @@ class APITransaction {
     }
   }
 
+  Future<ResponseParser> getTransaksi(
+      {required MutasiPageIdleState state}) async {
+    ResponseParser parser = ResponseParser();
+    try {
+      Map<String, dynamic>? data = {
+        "act": "trxGet",
+        "outlet_id": 1,
+        "user_id": int.parse(state.currentUser.userId),
+        'data': _getTrxMap(state),
+      };
+
+      final Response responseku =
+          await dio.get(BaseUrl.incomeService, queryParameters: data);
+      parser = ResponseParser.parse(mapData: responseku.data);
+      return parser;
+    } on DioError catch (e) {
+      Map response = {
+        'code': e.response!.statusCode,
+        'message': e.response!.data['meta']['message'],
+      };
+      parser = ResponseParser.error(mapData: response);
+      return parser;
+    } on Exception {
+      return parser;
+    }
+  }
+
+  Map _getTrxMap(MutasiPageIdleState state) {
+    Map data = {
+      "trx_id": 0,
+      "status": 1,
+      'date_start': (state.useFilter) ? state.startDate.toString() : '',
+      'date_end': (state.useFilter) ? state.toDate.toString() : '',
+    };
+    return data;
+  }
+
   Map _getIncomeData(dynamic state) {
     Map data = {
       'ptipe': _getPtipeCode(state),

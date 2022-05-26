@@ -41,6 +41,16 @@ class DashboardNavigateToPindah extends DashboardEvent {
   const DashboardNavigateToPindah({required this.currentOutletSub});
 }
 
+class DashboardNavigateToKurs extends DashboardEvent {
+  final OutletSub currentOutletSub;
+  const DashboardNavigateToKurs({required this.currentOutletSub});
+}
+
+class DashboardNavigateToMutasi extends DashboardEvent {
+  final OutletSub currentOutletSub;
+  const DashboardNavigateToMutasi({required this.currentOutletSub});
+}
+
 class DashboardSwitchToMenu extends DashboardEvent {
   final int switchToIndex;
   const DashboardSwitchToMenu({required this.switchToIndex});

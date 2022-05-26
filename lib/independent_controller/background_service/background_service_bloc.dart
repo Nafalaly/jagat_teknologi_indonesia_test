@@ -77,11 +77,12 @@ class BackgroundServiceBloc
     if (state is BackgroundServiceRunningState) {
     } else {
       emit(BackgroundServiceRunningState());
-
+      print('Background waiting..');
       await Future.delayed(const Duration(seconds: 30));
       if ((connectionCubit.state is NoInternetConnections)) {
       } else {
         await apiUser.backgroundHit();
+        print('Background Sent at${DateTime.now()}');
       }
       emit(BackgroundServiceIdleState());
       initializeService();

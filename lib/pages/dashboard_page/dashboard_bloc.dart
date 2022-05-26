@@ -79,6 +79,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit((state as DashboardIdleState).copyWith(
           navigator:
               DashboardToPindah(currentOutletSub: event.currentOutletSub)));
+    } else if (event is DashboardNavigateToKurs) {
+      emit((state as DashboardIdleState).copyWith(
+          navigator:
+              DashboardToKurs(currentOutletSub: event.currentOutletSub)));
+    } else if (event is DashboardNavigateToMutasi) {
+      emit((state as DashboardIdleState).copyWith(
+          navigator:
+              DashboardToMutasi(currentOutletSub: event.currentOutletSub)));
     }
   }
 

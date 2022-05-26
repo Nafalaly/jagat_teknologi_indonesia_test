@@ -4,7 +4,11 @@ class Currency {
   Currency() {
     id = currencyLogo = currencyDesc = currencyName = 'No Data';
   }
-  late String id;
+  Currency.dummy() {
+    id = null;
+    currencyLogo = currencyDesc = currencyName = 'Pilih';
+  }
+  late String? id;
   late String currencyName;
   late String currencyLogo;
   late String currencyDesc;

@@ -156,9 +156,19 @@ class _OutletCardWidgetState extends State<OutletCardWidget>
                 DashboardNavigateToPindah(currentOutletSub: widget.outletSub));
           }),
       _ButtonService(
-          title: 'Mutasi', assetPath: 'assets/btn_history.png', onTap: () {}),
+          title: 'Mutasi',
+          assetPath: 'assets/btn_history.png',
+          onTap: () {
+            widget.dashboard.add(
+                DashboardNavigateToMutasi(currentOutletSub: widget.outletSub));
+          }),
       _ButtonService(
-          title: 'Kurs', assetPath: 'assets/btn_kurs.png', onTap: () {}),
+          title: 'Kurs',
+          assetPath: 'assets/btn_kurs.png',
+          onTap: () {
+            widget.dashboard.add(
+                DashboardNavigateToKurs(currentOutletSub: widget.outletSub));
+          }),
     ];
     return BlocBuilder<OutletCardWidgetBloc, OutletCardWidgetState>(
       builder: (context, state) {
