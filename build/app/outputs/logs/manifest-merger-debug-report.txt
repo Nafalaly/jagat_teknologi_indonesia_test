@@ -27,6 +27,7 @@ MERGED from [:connectivity_plus] /home/nafalaly/Documents/project/flutter/projec
 MERGED from [:image_cropper] /home/nafalaly/Documents/project/flutter/projects/jagat_teknologi_indonesia_test/build/image_cropper/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.window:window-java:1.0.0-beta04] /home/nafalaly/.gradle/caches/transforms-3/246793f755122fe14a5802655438cb75/transformed/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.window:window:1.0.0-beta04] /home/nafalaly/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:17:1-33:12
+MERGED from [com.android.volley:volley:1.2.1] /home/nafalaly/.gradle/caches/transforms-3/ca6bfc8d4ee8d6e4d08b3f70731a1be8/transformed/jetified-volley-1.2.1/AndroidManifest.xml:2:1-7:12
 MERGED from [com.github.yalantis:ucrop:2.2.8] /home/nafalaly/.gradle/caches/transforms-3/c5ad09e0d49fe6423753be399010f082/transformed/jetified-ucrop-2.2.8/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat:1.3.0] /home/nafalaly/.gradle/caches/transforms-3/5bb5c542051ad7d41a6ce30144df9ca0/transformed/appcompat-1.3.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.transition:transition:1.4.1] /home/nafalaly/.gradle/caches/transforms-3/2bad31eddc1af32377c3d4b86d03d5eb/transformed/transition-1.4.1/AndroidManifest.xml:17:1-24:12
@@ -118,6 +119,8 @@ MERGED from [androidx.window:window-java:1.0.0-beta04] /home/nafalaly/.gradle/ca
 MERGED from [androidx.window:window-java:1.0.0-beta04] /home/nafalaly/.gradle/caches/transforms-3/246793f755122fe14a5802655438cb75/transformed/jetified-window-java-1.0.0-beta04/AndroidManifest.xml:19:5-21:41
 MERGED from [androidx.window:window:1.0.0-beta04] /home/nafalaly/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.window:window:1.0.0-beta04] /home/nafalaly/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:20:5-22:41
+MERGED from [com.android.volley:volley:1.2.1] /home/nafalaly/.gradle/caches/transforms-3/ca6bfc8d4ee8d6e4d08b3f70731a1be8/transformed/jetified-volley-1.2.1/AndroidManifest.xml:5:5-43
+MERGED from [com.android.volley:volley:1.2.1] /home/nafalaly/.gradle/caches/transforms-3/ca6bfc8d4ee8d6e4d08b3f70731a1be8/transformed/jetified-volley-1.2.1/AndroidManifest.xml:5:5-43
 MERGED from [com.github.yalantis:ucrop:2.2.8] /home/nafalaly/.gradle/caches/transforms-3/c5ad09e0d49fe6423753be399010f082/transformed/jetified-ucrop-2.2.8/AndroidManifest.xml:7:5-9:41
 MERGED from [com.github.yalantis:ucrop:2.2.8] /home/nafalaly/.gradle/caches/transforms-3/c5ad09e0d49fe6423753be399010f082/transformed/jetified-ucrop-2.2.8/AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.appcompat:appcompat:1.3.0] /home/nafalaly/.gradle/caches/transforms-3/5bb5c542051ad7d41a6ce30144df9ca0/transformed/appcompat-1.3.0/AndroidManifest.xml:20:5-22:41

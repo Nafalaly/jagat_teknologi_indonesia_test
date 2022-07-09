@@ -477,7 +477,7 @@ class IncomeServicePage extends StatelessWidget {
                         .isDummy) {
                       return Container(
                         height: allocatedHeightSize - 10,
-                        width: allocatedWidthSize - 270,
+                        width: allocatedWidthSize - 300,
                         decoration: BoxDecoration(
                             color: secondColor.withOpacity(0.2),
                             borderRadius:
@@ -496,7 +496,7 @@ class IncomeServicePage extends StatelessWidget {
                         onTap: () => removePictureDialog(context, index),
                         child: Container(
                           height: allocatedHeightSize - 10,
-                          width: allocatedWidthSize - 270,
+                          width: allocatedWidthSize - 300,
                           decoration: BoxDecoration(
                               color: Colors.blue,
                               borderRadius:
@@ -529,7 +529,7 @@ class IncomeServicePage extends StatelessWidget {
                                 child: Container(
                                   key: _pictureKey,
                                   height: allocatedHeightSize - 10,
-                                  width: allocatedWidthSize - 270,
+                                  width: allocatedWidthSize - 300,
                                   decoration: BoxDecoration(
                                       color: secondColor,
                                       borderRadius: const BorderRadius.all(

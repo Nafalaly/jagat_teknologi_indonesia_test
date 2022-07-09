@@ -1,4 +1,4 @@
-#Thu May 26 14:34:11 WIB 2022
+#Sat Jul 09 10:29:02 WIB 2022
 base.0=/home/nafalaly/Documents/project/flutter/projects/jagat_teknologi_indonesia_test/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex
