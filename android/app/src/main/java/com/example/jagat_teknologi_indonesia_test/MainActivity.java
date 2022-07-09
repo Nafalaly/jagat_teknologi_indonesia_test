@@ -46,7 +46,7 @@ public class MainActivity extends FlutterActivity {
             createnotifchannel();
             createservice();
 //            channelListener(flutterEngine);
-            startHelpdeskListen();
+            // startHelpdeskListen();
 
         }
 
@@ -63,7 +63,7 @@ public class MainActivity extends FlutterActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onPause() {
-        startHelpdeskListen();
+        // startHelpdeskListen();
         super.onPause();
     }
 
